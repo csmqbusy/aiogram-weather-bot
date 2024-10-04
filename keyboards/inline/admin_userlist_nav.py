@@ -21,7 +21,6 @@ def userlist_kb(
                 )
             ]
         )
-
     button_page = InlineKeyboardButton(
         text=curr_page_text,
         callback_data=AdminsActionsCb(action="None").pack()
