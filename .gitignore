@@ -1,4 +1,6 @@
+__pycache__/
 .venv
 .idea
 .env
 weather_example.json
+.DS_Store
