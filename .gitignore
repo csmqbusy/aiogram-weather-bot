@@ -4,3 +4,4 @@ __pycache__/
 .env
 weather_example.json
 .DS_Store
+TODO.txt
