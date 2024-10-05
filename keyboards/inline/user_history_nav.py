@@ -1,6 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from callbacks import ReportsActionsCb, ReportViewCb
+from lexicon import lexicon
 
 
 def reports_history_kb(
@@ -16,7 +17,9 @@ def reports_history_kb(
         report_buttons.append(
             [
                 InlineKeyboardButton(
-                    text=f"{report.city} {report.date.day}.{report.date.month}.{report.date.year}",
+                    text=lexicon["report_format"].format(
+                        report.city, report.date.day, report.date.month, report.date.year
+                    ),
                     callback_data=ReportViewCb(action="show", report_id=report.id).pack()
                 )
             ]
@@ -26,11 +29,11 @@ def reports_history_kb(
         callback_data=ReportsActionsCb(action="None").pack()
     )
     button_next = InlineKeyboardButton(
-        text="Вперед",
+        text=lexicon["forward"],
         callback_data=ReportsActionsCb(action="next").pack()
     )
     button_prev = InlineKeyboardButton(
-        text="Назад",
+        text=lexicon["back"],
         callback_data=ReportsActionsCb(action="prev").pack()
     )
 

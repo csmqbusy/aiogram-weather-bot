@@ -9,25 +9,25 @@ from database.orm import db_client
 from handlers.user.commands import menu_cmd
 from keyboards.reply.other_keyboards import cancel_kb
 from keyboards.reply.user_menu import user_menu_kb
+from lexicon import lexicon
 from utils.weather_utils import prepare_weather_data, convert_weather_data_to_message
 from states import SetUserCity, OtherCityWeather
 
 router = Router()
 
 
-@router.message(F.text == "Установить свой город")
+@router.message(F.text == lexicon["set_your_city"])
 async def set_user_city(message: Message, state: FSMContext):
     markup = cancel_kb()
-    text = "Введите название вашего города"
     await state.set_state(SetUserCity.waiting_city)
     await message.answer(
-        text=text,
+        text=lexicon["enter_the_city_name"],
         reply_markup=markup
     )
 
 
-@router.message(StateFilter(SetUserCity.waiting_city), F.text == "Отмена")
-@router.message(StateFilter(OtherCityWeather.waiting_city), F.text == "Отмена")
+@router.message(StateFilter(SetUserCity.waiting_city), F.text == lexicon["cancel"])
+@router.message(StateFilter(OtherCityWeather.waiting_city), F.text == lexicon["cancel"])
 async def user_city_cancel(message: Message, state: FSMContext):
     await menu_cmd(message)
     await state.clear()
@@ -41,31 +41,26 @@ async def user_city_chosen(message: Message, state: FSMContext):
         user_city = data["user_city"]
         db_client.set_user_city(message.from_user.id, user_city)
         markup = user_menu_kb()
-        text = f"Запомнил, {user_city} – ваш город"
-
         await message.answer(
-            text=text,
+            text=lexicon["set_your_city_fbk"].format(user_city),
             reply_markup=markup
         )
         await state.clear()
     else:
-        text = "Некорректное название города. Попробуйте ещё раз"
         markup = cancel_kb()
         await message.answer(
-            text=text,
+            text=lexicon["incorrect_city_name"],
             reply_markup=markup
         )
 
 
-@router.message(F.text == "Погода в моем городе")
+@router.message(F.text == lexicon["user_city_weather"])
 async def user_city_weather(message: Message):
     markup = user_menu_kb()
-
     user_city = db_client.get_user_city(message.from_user.id)
     if user_city is None:
-        text = "Вы ещё не выбрали свой город.\n Можете сделать это в меню либо запросить погоду в другом месте"
         await message.answer(
-            text=text,
+            text=lexicon["no_user_city"],
             reply_markup=markup
         )
     else:
@@ -77,20 +72,18 @@ async def user_city_weather(message: Message):
             weather_data["pressure"], weather_data["city"]
         )
         text = convert_weather_data_to_message(weather_data)
-
         await message.answer(
             text=text,
             reply_markup=markup
         )
 
 
-@router.message(F.text == "Погода в другом месте")
+@router.message(F.text == lexicon["other_city_weather"])
 async def other_city_weather(message: Message, state: FSMContext):
     markup = cancel_kb()
-    text = "Введите название города"
     await state.set_state(OtherCityWeather.waiting_city)
     await message.answer(
-        text=text,
+        text=lexicon["enter_the_city_name"],
         reply_markup=markup
     )
 
@@ -115,9 +108,8 @@ async def city_chosen(message: Message, state: FSMContext):
         )
         await state.clear()
     else:
-        text = "Некорректное название города. Попробуйте ещё раз"
         markup = cancel_kb()
         await message.answer(
-            text=text,
+            text=lexicon["incorrect_city_name"],
             reply_markup=markup
         )

@@ -1,6 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from callbacks import AdminsActionsCb
+from lexicon import lexicon
 
 
 def userlist_kb(
@@ -17,7 +18,7 @@ def userlist_kb(
         user_buttons.append(
             [
                 InlineKeyboardButton(
-                    text=f"{user.id}) id: {user.tg_id}, подключился {conn_date}, {len(user.reports)} отчётов",
+                    text=lexicon["user_format"].format(user.id, user.tg_id, conn_date, len(user.reports)),
                     callback_data=AdminsActionsCb(action="None").pack()
                 )
             ]
@@ -27,11 +28,11 @@ def userlist_kb(
         callback_data=AdminsActionsCb(action="None").pack()
     )
     button_prev = InlineKeyboardButton(
-        text="Назад",
+        text=lexicon["back"],
         callback_data=AdminsActionsCb(action="prev_users_page").pack()
     )
     button_next = InlineKeyboardButton(
-        text="Вперед",
+        text=lexicon["forward"],
         callback_data=AdminsActionsCb(action="next_users_page").pack()
     )
 

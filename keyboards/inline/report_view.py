@@ -1,15 +1,16 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from callbacks import ReportViewCb
+from lexicon import lexicon
 
 
 def report_view_kb(report_id: int) -> InlineKeyboardMarkup:
     button_back = InlineKeyboardButton(
-        text="Назад",
+        text=lexicon["back"],
         callback_data="back_to_history"
     )
     button_delete = InlineKeyboardButton(
-        text="Удалить запрос",
+        text=lexicon["delete_request"],
         callback_data=ReportViewCb(action="delete", report_id=report_id).pack()
     )
     markup = InlineKeyboardMarkup(

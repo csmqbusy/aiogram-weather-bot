@@ -4,6 +4,7 @@ from aiogram.types import Message
 
 from database.orm import db_client
 from keyboards.reply.user_menu import user_menu_kb
+from lexicon import lexicon
 
 router = Router()
 
@@ -12,7 +13,7 @@ router = Router()
 async def start_cmd(message: Message):
     db_client.add_user(message.from_user.id)
     markup = user_menu_kb()
-    text = f"Привет, {message.from_user.first_name}! Я бот, который расскажет тебе о погоде на сегодня"
+    text = lexicon["/start"].format(message.from_user.first_name)
     await message.answer(
         text=text,
         reply_markup=markup
@@ -22,8 +23,7 @@ async def start_cmd(message: Message):
 @router.message(Command(commands="menu"))
 async def menu_cmd(message: Message):
     markup = user_menu_kb()
-    text = "Главное меню"
     await message.answer(
-        text=text,
+        text=lexicon["main_menu_user"],
         reply_markup=markup
     )

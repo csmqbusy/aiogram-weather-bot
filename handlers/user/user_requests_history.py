@@ -9,12 +9,13 @@ from callbacks import ReportsActionsCb, ReportViewCb
 from database.orm import db_client
 from keyboards.inline.report_view import report_view_kb
 from keyboards.inline.user_history_nav import reports_history_kb
+from lexicon import lexicon
 
 router = Router()
 
 
 @router.callback_query(F.data == "back_to_history")
-@router.message(F.text == "История")
+@router.message(F.text == lexicon["history"])
 async def show_reports_first_page(update: Message | CallbackQuery, state: FSMContext):
     current_page = 1
     await state.update_data(current_page=current_page)
@@ -25,15 +26,14 @@ async def show_reports_first_page(update: Message | CallbackQuery, state: FSMCon
         reports=reports, slice_=slice(current_page * 4),
         curr_page_text=curr_page_text, next_=True
     )
-    text = "История запросов:"
     if hasattr(update, "data"):
         await update.message.edit_text(
-            text=text,
+            text=lexicon["request_history"],
             reply_markup=markup
         )
     else:
         await update.answer(
-            text=text,
+            text=lexicon["request_history"],
             reply_markup=markup
         )
 
@@ -57,7 +57,7 @@ async def callback_next_reports_page(query: CallbackQuery, state: FSMContext):
         curr_page_text=curr_page_text, prev=True, next_=next_
     )
     await query.message.edit_text(
-        text="История запросов:",
+        text=lexicon["request_history"],
         reply_markup=markup
     )
 
@@ -81,7 +81,7 @@ async def callback_prev_reports_page(query: CallbackQuery, state: FSMContext):
         curr_page_text=curr_page_text, prev=prev, next_=True
     )
     await query.message.edit_text(
-        text="История запросов:",
+        text=lexicon["request_history"],
         reply_markup=markup
     )
 
@@ -96,12 +96,13 @@ async def callback_show_report(query: CallbackQuery, callback_data: CallbackData
             current_report = report
             break
     markup = report_view_kb(report_id)
-    text = ("Данные по запросу:\n\n"
-            f"Город: {current_report.city}\n"
-            f"Температура: {current_report.temp} °C\n"
-            f"Ощущается как: {current_report.feels_like} °C\n"
-            f"Скорость ветра: {current_report.wind_speed} км/ч\n"
-            f"Давление: {current_report.pressure_mm} мм рт. ст.")
+    text = lexicon["show_report"].format(
+        current_report.city,
+        current_report.temp,
+        current_report.feels_like,
+        current_report.wind_speed,
+        current_report.pressure_mm
+    )
     await query.message.edit_text(
         text=text,
         reply_markup=markup

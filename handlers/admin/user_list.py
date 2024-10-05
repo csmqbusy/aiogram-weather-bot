@@ -8,13 +8,14 @@ from callbacks import AdminsActionsCb
 from database.orm import db_client
 from filters import IsAdmin
 from keyboards.inline.admin_userlist_nav import userlist_kb
+from lexicon import lexicon
 
 router = Router()
 router.message.filter(IsAdmin())
 router.callback_query.filter(IsAdmin())
 
 
-@router.message(F.text == "Список пользователей")
+@router.message(F.text == lexicon["list_of_users"])
 async def get_all_users(message: Message, state: FSMContext):
     current_page = 1
     await state.update_data(current_page=current_page)
@@ -26,7 +27,7 @@ async def get_all_users(message: Message, state: FSMContext):
         curr_page_text=curr_page_text, next_=True
     )
     await message.answer(
-        text="Все пользователи бота:",
+        text=lexicon["all_bot_users"],
         reply_markup=markup
     )
 
@@ -50,7 +51,7 @@ async def callback_next_reports_page(query: CallbackQuery, state: FSMContext):
             curr_page_text=curr_page_text, prev=True, next_=True
         )
     await query.message.edit_text(
-        text="Все пользователи бота:",
+        text=lexicon["all_bot_users"],
         reply_markup=markup
     )
 
@@ -74,6 +75,6 @@ async def callback_prev_reports_page(query: CallbackQuery, state: FSMContext):
             curr_page_text=curr_page_text, prev=True, next_=True
         )
     await query.message.edit_text(
-        text="Все пользователи бота:",
+        text=lexicon["all_bot_users"],
         reply_markup=markup
     )
