@@ -7,6 +7,7 @@ def user_menu_kb():
     btn3 = KeyboardButton(text="История")
     btn4 = KeyboardButton(text="Установить свой город")
     markup = ReplyKeyboardMarkup(
-        keyboard=[[btn1], [btn2], [btn3], [btn4]]
+        keyboard=[[btn1], [btn2], [btn3], [btn4]],
+        resize_keyboard=True
     )
     return markup
