@@ -10,6 +10,7 @@ def userlist_kb(
         prev: bool = False,
         next_: bool = False
 ) -> InlineKeyboardMarkup:
+
     user_buttons = []
     for user in users[slice_]:
         conn_date = f"{user.connection_date.day}.{user.connection_date.month}.{user.connection_date.year}"

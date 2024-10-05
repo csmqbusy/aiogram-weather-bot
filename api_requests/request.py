@@ -5,7 +5,7 @@ import requests
 from settings.config import settings
 
 
-def get_weather(city: str):
+def get_weather_data(city: str):
     r = requests.get(url='http://api.weatherapi.com/v1/current.json',
                      params={
                          'key': settings.API_KEY,

@@ -3,7 +3,7 @@ from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup
 
-from api_requests.request import get_weather
+from api_requests.request import get_weather_data
 from database.orm import db_client
 from keyboards.reply.user_menu import user_menu_kb
 from utils.weather_utils import prepare_weather_data, convert_weather_data_to_message
@@ -55,7 +55,7 @@ async def user_city_weather(message: Message, state: FSMContext):
             reply_markup=markup
         )
     else:
-        weather_full_data = get_weather(user_city)
+        weather_full_data = get_weather_data(user_city)
         weather_data = prepare_weather_data(weather_full_data)
         db_client.create_weather_report(
             message.from_user.id, weather_data["temp"],
@@ -91,7 +91,7 @@ async def city_chosen(message: Message, state: FSMContext):
     markup = user_menu_kb()
 
     city = message.text
-    weather_full_data = get_weather(city)
+    weather_full_data = get_weather_data(city)
     weather_data = prepare_weather_data(weather_full_data)
     db_client.create_weather_report(
         message.from_user.id, weather_data["temp"],

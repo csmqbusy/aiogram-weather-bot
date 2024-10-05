@@ -40,4 +40,4 @@ class WeatherReportsORM(Base):
     user: Mapped[list["UsersORM"]] = relationship(back_populates="reports")
 
     def __repr__(self):
-        return f"{self.city}, {self.date}, {self.temp}"
+        return f"{self.city}, {self.date.day}.{self.date.month}.{self.date.year}, {self.temp} °C"
