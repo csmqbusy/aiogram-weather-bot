@@ -5,7 +5,7 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from callbacks.callback_factory import ReportsActionsCb, ReportViewCb
+from callbacks import ReportsActionsCb, ReportViewCb
 from database.orm import db_client
 from keyboards.inline.report_view import report_view_kb
 from keyboards.inline.user_history_nav import reports_history_kb

@@ -4,7 +4,7 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
-from callbacks.callback_factory import AdminsActionsCb
+from callbacks import AdminsActionsCb
 from database.orm import db_client
 from filters import IsAdmin
 from keyboards.inline.admin_userlist_nav import userlist_kb

@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from callbacks.callback_factory import ReportsActionsCb, ReportViewCb
+from callbacks import ReportsActionsCb, ReportViewCb
 
 
 def reports_history_kb(

@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from callbacks.callback_factory import ReportViewCb
+from callbacks import ReportViewCb
 
 
 def report_view_kb(report_id: int) -> InlineKeyboardMarkup:

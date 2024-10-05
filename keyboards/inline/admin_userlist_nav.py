@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from callbacks.callback_factory import AdminsActionsCb
+from callbacks import AdminsActionsCb
 
 
 def userlist_kb(
