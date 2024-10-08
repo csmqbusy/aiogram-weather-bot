@@ -11,7 +11,7 @@ from keyboards.reply.other_keyboards import cancel_kb
 from keyboards.reply.user_menu import user_menu_kb
 from lexicon import lexicon
 from utils.weather_utils import prepare_weather_data, convert_weather_data_to_message
-from states import SetUserCity, OtherCityWeather
+from states_old import SetUserCity, OtherCityWeather
 
 router = Router()
 
