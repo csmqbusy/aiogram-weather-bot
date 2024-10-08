@@ -4,6 +4,7 @@ from .user_menu import user_menu
 from .my_city_weather import my_city_weather
 from .other_city_weather import other_city_weather
 from .set_city import set_city
+from .requests_history import requests_history
 
 all_dialogs = [
     admin_menu,
@@ -11,5 +12,6 @@ all_dialogs = [
     user_menu,
     my_city_weather,
     other_city_weather,
-    set_city
+    set_city,
+    requests_history
 ]

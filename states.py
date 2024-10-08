@@ -24,6 +24,7 @@ class OtherCityWeatherSG(StatesGroup):
 
 class RequestsHistorySG(StatesGroup):
     main = State()
+    report = State()
 
 
 class SetCitySG(StatesGroup):

@@ -49,6 +49,12 @@ class DBClient:
             return user.reports
 
     @staticmethod
+    def get_report(report_id):
+        with session_factory() as session:
+            report = session.get(WeatherReportsORM, report_id)
+            return report
+
+    @staticmethod
     def delete_user_report(report_id):
         with session_factory() as session:
             report = session.get(WeatherReportsORM, report_id)

@@ -1,4 +1,4 @@
-from aiogram_dialog import Dialog, Window
+from aiogram_dialog import Dialog, Window, StartMode
 from aiogram_dialog.widgets.kbd import Start
 from aiogram_dialog.widgets.text import Const
 
@@ -22,6 +22,7 @@ user_menu = Dialog(
             Const("История"),
             id="requests_history",
             state=states.RequestsHistorySG.main,
+            data={"history_page": 0}
         ),
         Start(
             Const("Установить свой город"),
