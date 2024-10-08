@@ -1,7 +1,7 @@
 import operator
 
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.kbd import Button, Column, Select, Row
+from aiogram_dialog.widgets.kbd import Button, Column, Select, Row, Cancel
 from aiogram_dialog.widgets.text import Const, Format
 
 import states
@@ -25,6 +25,7 @@ user_list = Dialog(
             Button(Format("{page}/{n_of_pages}"), id="current"),
             Button(Const("next"), id="next", on_click=increase_page)
         ),
+        Cancel(Const("В главное меню"), id="button_cancel"),
         getter=get_users_data,
         state=states.UsersListSG.main,
     )

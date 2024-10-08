@@ -5,8 +5,6 @@ from aiogram_dialog import DialogManager
 
 import states
 from filters import IsAdmin
-from keyboards.reply.admin_menu import admin_menu_kb
-from lexicon import lexicon
 
 router = Router()
 router.message.filter(IsAdmin())
