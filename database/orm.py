@@ -32,12 +32,13 @@ class DBClient:
             return user.city
 
     @staticmethod
-    def create_weather_report(tg_id, temp, feels_like, wind_speed, pressure_mm, city):
+    def create_weather_report(tg_id, temp, feels_like, wind_speed, pressure_mm, city, country):
         with session_factory() as session:
             user = session.query(UsersORM).filter(UsersORM.tg_id == tg_id).first()
             report = WeatherReportsORM(
                 owner=user.id, temp=temp, feels_like=feels_like,
-                wind_speed=wind_speed, pressure_mm=pressure_mm, city=city
+                wind_speed=wind_speed, pressure_mm=pressure_mm, city=city,
+                country=country
             )
             session.add(report)
             session.commit()
@@ -66,6 +67,12 @@ class DBClient:
         with session_factory() as session:
             users = session.query(UsersORM).options(selectinload(UsersORM.reports)).all()
             return users
+
+    @staticmethod
+    def get_all_reports():
+        with session_factory() as session:
+            reports = session.query(WeatherReportsORM).all()
+            return reports
 
     @staticmethod
     def add_fake_users():

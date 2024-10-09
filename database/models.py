@@ -12,7 +12,7 @@ class UsersORM(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     tg_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
-    city: Mapped[str] = mapped_column(nullable=True)
+    city: Mapped[str] = mapped_column(nullable=False)
     connection_date: Mapped[datetime] = mapped_column(
         server_default=text("TIMEZONE ('utc', now())"),
         nullable=False
@@ -37,6 +37,7 @@ class WeatherReportsORM(Base):
     wind_speed: Mapped[float] = mapped_column(nullable=False)
     pressure_mm: Mapped[float] = mapped_column(nullable=False)
     city: Mapped[str] = mapped_column(nullable=False)
+    country: Mapped[str] = mapped_column(nullable=True)
     user: Mapped[list["UsersORM"]] = relationship(back_populates="reports")
 
     def __repr__(self):

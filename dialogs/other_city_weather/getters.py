@@ -14,6 +14,7 @@ async def get_weather(dialog_manager: DialogManager, event_from_user: User, **kw
     db_client.create_weather_report(
         user_id, weather_data["temp"],
         weather_data["feels_like"], weather_data["wind_speed"],
-        weather_data["pressure"], weather_data["city"]
+        weather_data["pressure"], weather_data["city"],
+        weather_data["country"]
     )
     return weather_data

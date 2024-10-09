@@ -17,7 +17,7 @@ def prepare_weather_data(data: dict) -> dict:
         "icon": icon,
         "date": date,
         "city": data['location']['name'],
-        "counrty": data['location']['country'],
+        "country": data['location']['country'],
         "temp": data['current']['temp_c'],
         "feels_like": data['current']['feelslike_c'],
         "wind_speed": data['current']['wind_kph'],
@@ -35,6 +35,7 @@ def prepare_report_data(report: WeatherReportsORM) -> dict:
     data = {
         "date": date,
         "city": report.city,
+        "country": report.country,
         "temp": report.temp,
         "feels_like": report.feels_like,
         "wind_speed": report.wind_speed,
