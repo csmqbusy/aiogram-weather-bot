@@ -6,11 +6,10 @@ from aiogram_dialog.widgets.text import Const, Format
 
 import states
 from dialogs.requests_history.getters import get_reports_data, get_report_data
-from dialogs.requests_history.handlers import (decrease_page, increase_page, on_report_selected, delete_request,
-                                               reset_history_page)
+from dialogs.requests_history.handlers import decrease_page, increase_page, on_report_selected, delete_request
 from lexicon import lexicon
 
-main_menu_button = Cancel(Const("В главное меню"), id="button_cancel", on_click=reset_history_page)
+main_menu_button = Cancel(Const("В главное меню"), id="button_cancel")
 
 requests_history = Dialog(
     Window(

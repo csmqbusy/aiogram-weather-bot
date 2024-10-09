@@ -12,7 +12,7 @@ admin_menu = Dialog(
             Const("Список пользователей"),
             id="users_list",
             state=states.UsersListSG.main,
-            data={"page": 0}
+            data={"userlist_page": 1}
         ),
         state=states.AdminMenuSG.main,
     )

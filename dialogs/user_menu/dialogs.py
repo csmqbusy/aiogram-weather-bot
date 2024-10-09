@@ -22,7 +22,7 @@ user_menu = Dialog(
             Const("История"),
             id="requests_history",
             state=states.RequestsHistorySG.main,
-            data={"history_page": 0}
+            data={"history_page": 1}
         ),
         Start(
             Const("Установить свой город"),

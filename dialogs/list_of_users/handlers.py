@@ -10,13 +10,13 @@ async def on_user_selected(callback: CallbackQuery, widget: Any,
 
 
 async def decrease_page(callback: CallbackQuery, widget: Any, dialog_manager: DialogManager):
-    page = dialog_manager.start_data.get("page")
-    if page > 0:
-        dialog_manager.start_data.update(page=page - 1)
+    page = dialog_manager.dialog_data.get("userlist_page")
+    if page > 1:
+        dialog_manager.dialog_data.update(userlist_page=page - 1)
 
 
 async def increase_page(callback: CallbackQuery, widget: Any, dialog_manager: DialogManager):
-    page = dialog_manager.start_data.get("page")
-    n_of_pages = dialog_manager.start_data.get("n_of_pages")
-    if page + 1 < n_of_pages:
-        dialog_manager.start_data.update(page=page + 1)
+    page = dialog_manager.dialog_data.get("userlist_page")
+    n_of_pages = dialog_manager.dialog_data.get("n_of_users_pages")
+    if page < n_of_pages:
+        dialog_manager.dialog_data.update(userlist_page=page + 1)
