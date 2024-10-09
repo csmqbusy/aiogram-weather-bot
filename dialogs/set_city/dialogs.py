@@ -18,18 +18,18 @@ set_city = Dialog(
             on_success=correct_city_setup,
             on_error=error_city_setup
         ),
-        Cancel(Const('Отмена'), id='button_cancel'),
+        Cancel(Const(lexicon["cancel"]), id='button_cancel'),
         state=states.SetCitySG.setup_city,
     ),
     Window(
-        Format("Запомнил, {user_city} – ваш город"),
+        Format(lexicon["set_my_city_fbk"]),
         Start(
-            Const("Узнать погоду в моем городе"),
+            Const(lexicon["get_the_weather_in_my_city"]),
             id="my_city_weather",
             state=states.MyCityWeatherSG.main
         ),
         Start(
-            Const("В главное меню"),
+            Const(lexicon["to_main_menu"]),
             id="main_menu",
             state=states.UserMenuSG.main
         ),

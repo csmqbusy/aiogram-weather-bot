@@ -18,17 +18,13 @@ other_city_weather = Dialog(
             on_success=correct_city_handler,
             on_error=error_city_handler
         ),
-        Cancel(Const('Отмена'), id='button_cancel'),
+        Cancel(Const(lexicon["cancel"]), id='button_cancel'),
         state=states.OtherCityWeatherSG.city_selection,
     ),
     Window(
-        Format("Погода в {city}, {counrty}:\n\n"
-               "Температура: {temp} °C\n"
-               "Ощущается как: {feels_like} °C\n"
-               "Скорость ветра: {wind_speed} км/ч\n"
-               "Давление: {pressure} мм рт. ст."),
-        Back(Const("К выбору города")),
-        Start(Const("В главное меню"), id="main_menu", state=states.UserMenuSG.main),
+        Format(lexicon["weather_report"]),
+        Back(Const(lexicon["choose_another_city"])),
+        Start(Const(lexicon["to_main_menu"]), id="main_menu", state=states.UserMenuSG.main),
         state=states.OtherCityWeatherSG.weather,
         getter=get_weather
     )

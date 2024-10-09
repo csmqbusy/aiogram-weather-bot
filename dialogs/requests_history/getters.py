@@ -4,6 +4,7 @@ from aiogram.types import User
 from aiogram_dialog import DialogManager
 
 from database.orm import db_client
+from utils.weather_utils import prepare_report_data
 
 
 async def get_reports_data(dialog_manager: DialogManager, event_from_user: User, **kwargs):
@@ -37,9 +38,4 @@ def prepare_reports_for_dialog(reports_orm: list):
 async def get_report_data(dialog_manager: DialogManager, event_from_user: User, **kwargs):
     report_id = dialog_manager.dialog_data.get("report_id")
     report = db_client.get_report(report_id)
-    data = {"city": report.city,
-            "temp": report.temp,
-            "feels_like": report.feels_like,
-            "wind_speed": report.wind_speed,
-            "pressure": report.pressure_mm}
-    return data
+    return prepare_report_data(report)

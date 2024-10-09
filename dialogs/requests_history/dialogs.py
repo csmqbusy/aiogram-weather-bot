@@ -9,14 +9,14 @@ from dialogs.requests_history.getters import get_reports_data, get_report_data
 from dialogs.requests_history.handlers import decrease_page, increase_page, on_report_selected, delete_request
 from lexicon import lexicon
 
-main_menu_button = Cancel(Const("В главное меню"), id="button_cancel")
+main_menu_button = Cancel(Const(lexicon["to_main_menu"]), id="button_cancel")
 
 requests_history = Dialog(
     Window(
         Const(lexicon["request_history"]),
         Column(
             Select(
-                Format("{item[1]} {item[2]}.{item[3]}.{item[4]}"),
+                Format(lexicon["report_format"]),
                 id="s_reports",
                 item_id_getter=operator.itemgetter(0),
                 items="reports",
@@ -24,20 +24,18 @@ requests_history = Dialog(
             )
         ),
         Row(
-            Button(Const("back"), id="back", on_click=decrease_page),
-            Button(Format("{page}/{n_of_pages}"), id="current"),
-            Button(Const("next"), id="next", on_click=increase_page)
+            Button(Const(lexicon["back"]), id="back", on_click=decrease_page),
+            Button(Format("[{page}/{n_of_pages}]"), id="current"),
+            Button(Const(lexicon["forward"]), id="next", on_click=increase_page)
         ),
         main_menu_button,
         state=states.RequestsHistorySG.main,
         getter=get_reports_data
     ),
     Window(
-        Format("Данные по запросу:\n\nГород: {city}\nТемпература: {temp} °C\n"
-               "Ощущается как: {feels_like} °C\nСкорость ветра: {wind_speed} км/ч\n"
-               "Давление: {pressure} мм рт. ст."),
-        Button(Const("Удалить запрос"), id="delete_report", on_click=delete_request),
-        Back(Const("Назад"), id="back"),
+        Format(lexicon["show_history_report"]),
+        Button(Const(lexicon["delete"]), id="delete_report", on_click=delete_request),
+        Back(Const(lexicon["back"]), id="back"),
         main_menu_button,
         state=states.RequestsHistorySG.report,
         getter=get_report_data

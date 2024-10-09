@@ -5,15 +5,16 @@ from aiogram_dialog.widgets.kbd import Button, Column, Select, Row, Cancel
 from aiogram_dialog.widgets.text import Const, Format
 
 import states
+from lexicon import lexicon
 from .getters import get_users_data
 from .handlers import decrease_page, increase_page, on_user_selected
 
 user_list = Dialog(
     Window(
-        Const("Привет!"),
+        Const(lexicon["all_bot_users"]),
         Column(
             Select(
-                Format("{item[0]}) id: {item[1]}, подключился {item[2]}, {item[3]} отчётов"),
+                Format(lexicon["user_format"]),
                 id="s_users",
                 item_id_getter=operator.itemgetter(0),
                 items="users",
@@ -21,11 +22,11 @@ user_list = Dialog(
             )
         ),
         Row(
-            Button(Const("back"), id="back", on_click=decrease_page),
-            Button(Format("{page}/{n_of_pages}"), id="current"),
-            Button(Const("next"), id="next", on_click=increase_page)
+            Button(Const(lexicon["back"]), id="back", on_click=decrease_page),
+            Button(Format("[{page}/{n_of_pages}]"), id="current"),
+            Button(Const(lexicon["forward"]), id="next", on_click=increase_page)
         ),
-        Cancel(Const("В главное меню"), id="button_cancel"),
+        Cancel(Const(lexicon["to_main_menu"]), id="button_cancel"),
         getter=get_users_data,
         state=states.UsersListSG.main,
     )

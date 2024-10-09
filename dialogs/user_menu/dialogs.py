@@ -9,23 +9,23 @@ user_menu = Dialog(
     Window(
         Const(lexicon["main_menu_user"]),
         Start(
-            Const("Погода в моем городе"),
+            Const(lexicon["user_city_weather"]),
             id="my_city_weather",
             state=states.MyCityWeatherSG.main
         ),
         Start(
-            Const("Погода в другом месте"),
+            Const(lexicon["other_city_weather"]),
             id="other_city_weather",
             state=states.OtherCityWeatherSG.city_selection,
         ),
         Start(
-            Const("История"),
+            Const(lexicon["history"]),
             id="requests_history",
             state=states.RequestsHistorySG.main,
             data={"history_page": 1}
         ),
         Start(
-            Const("Установить свой город"),
+            Const(lexicon["set_my_city"]),
             id="set_city",
             state=states.SetCitySG.setup_city,
         ),

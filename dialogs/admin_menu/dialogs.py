@@ -9,7 +9,7 @@ admin_menu = Dialog(
     Window(
         Const(lexicon["admin_menu"]),
         Start(
-            Const("Список пользователей"),
+            Const(lexicon["list_of_users"]),
             id="users_list",
             state=states.UsersListSG.main,
             data={"userlist_page": 1}
