@@ -32,13 +32,13 @@ class DBClient:
             return user.city
 
     @staticmethod
-    def create_weather_report(tg_id, temp, feels_like, wind_speed, pressure_mm, city, country):
+    def create_weather_report(tg_id, temp, feels_like, wind_speed, pressure_mm, city, country, visibility):
         with session_factory() as session:
             user = session.query(UsersORM).filter(UsersORM.tg_id == tg_id).first()
             report = WeatherReportsORM(
                 owner=user.id, temp=temp, feels_like=feels_like,
                 wind_speed=wind_speed, pressure_mm=pressure_mm, city=city,
-                country=country
+                country=country, visibility=visibility
             )
             session.add(report)
             session.commit()

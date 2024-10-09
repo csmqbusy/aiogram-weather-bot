@@ -1,8 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy import (Table, Column, Integer, String, ForeignKey, BigInteger,
-                        create_engine, select, text)
-from sqlalchemy.orm import relationship, sessionmaker, DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import ForeignKey, BigInteger, text
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from database.database import Base
 
@@ -36,6 +35,7 @@ class WeatherReportsORM(Base):
     feels_like: Mapped[float] = mapped_column(nullable=False)
     wind_speed: Mapped[float] = mapped_column(nullable=False)
     pressure_mm: Mapped[float] = mapped_column(nullable=False)
+    visibility: Mapped[float] = mapped_column(nullable=False, server_default=str(0.0))
     city: Mapped[str] = mapped_column(nullable=False)
     country: Mapped[str] = mapped_column(nullable=True)
     user: Mapped[list["UsersORM"]] = relationship(back_populates="reports")

@@ -5,23 +5,24 @@ from datetime import datetime
 from database.models import WeatherReportsORM
 
 
-def prepare_weather_data(data: dict) -> dict:
-    localtime = datetime.strptime(data["location"]["localtime"], "%Y-%m-%d %H:%M")
+def prepare_weather_data(w_data: dict) -> dict:
+    localtime = datetime.strptime(w_data["location"]["localtime"], "%Y-%m-%d %H:%M")
     month = get_month_name_translation(localtime.strftime("%B"))
     weekday = get_weekday_name_translation(calendar.day_name[localtime.weekday()])
     date = f"{weekday} {localtime.day} {month} {localtime.year}г."
-    pressure_mm = int(data['current']['pressure_mb']) * 0.75
-    icon = data['current']['condition']['icon']
+    pressure_mm = int(w_data['current']['pressure_mb']) * 0.75
+    icon = w_data['current']['condition']['icon']
 
     weather_data = {
         "icon": icon,
         "date": date,
-        "city": data['location']['name'],
-        "country": data['location']['country'],
-        "temp": data['current']['temp_c'],
-        "feels_like": data['current']['feelslike_c'],
-        "wind_speed": data['current']['wind_kph'],
-        "pressure": str(pressure_mm)
+        "city": w_data['location']['name'],
+        "country": w_data['location']['country'],
+        "temp": w_data['current']['temp_c'],
+        "feels_like": w_data['current']['feelslike_c'],
+        "wind_speed": w_data['current']['wind_kph'],
+        "pressure": str(pressure_mm),
+        "visibility": w_data['current']['vis_km']
     }
     return weather_data
 
@@ -32,16 +33,17 @@ def prepare_report_data(report: WeatherReportsORM) -> dict:
     weekday = get_weekday_name_translation(calendar.day_name[localtime.weekday()])
     date = f"{weekday} {localtime.day} {month} {localtime.year}г."
 
-    data = {
+    w_data = {
         "date": date,
         "city": report.city,
         "country": report.country,
         "temp": report.temp,
         "feels_like": report.feels_like,
         "wind_speed": report.wind_speed,
-        "pressure": report.pressure_mm
+        "pressure": report.pressure_mm,
+        "visibility": report.visibility
     }
-    return data
+    return w_data
 
 
 def get_month_name_translation(month: str) -> str:
