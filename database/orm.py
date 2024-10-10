@@ -14,8 +14,7 @@ class DBClient:
         with session_factory() as session:
             user = session.query(UsersORM).filter(UsersORM.tg_id == tg_id).first()
             if user is None:
-                new_user = UsersORM(tg_id=tg_id)
-                session.add(new_user)
+                session.add(UsersORM(tg_id=tg_id))
                 session.commit()
 
     @staticmethod

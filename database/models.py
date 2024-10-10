@@ -11,7 +11,7 @@ class UsersORM(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     tg_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
-    city: Mapped[str] = mapped_column(nullable=False)
+    city: Mapped[str] = mapped_column(nullable=True)
     connection_date: Mapped[datetime] = mapped_column(
         server_default=text("TIMEZONE ('utc', now())"),
         nullable=False
