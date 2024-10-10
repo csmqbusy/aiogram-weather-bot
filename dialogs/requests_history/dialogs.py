@@ -1,15 +1,14 @@
 import operator
 
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.kbd import Row, Button, Cancel, Column, Select, Back
+from aiogram_dialog.widgets.kbd import Row, Button, Cancel, Column, Select, Back, Start
 from aiogram_dialog.widgets.text import Const, Format
 
 import states
+from dialogs.common.handlers import close_current_dialog
 from dialogs.requests_history.getters import get_reports_data, get_report_data
 from dialogs.requests_history.handlers import decrease_page, increase_page, on_report_selected, delete_request
 from lexicon import lexicon
-
-main_menu_button = Cancel(Const(lexicon["to_main_menu"]), id="button_cancel")
 
 requests_history = Dialog(
     Window(
@@ -28,7 +27,12 @@ requests_history = Dialog(
             Button(Format("[{page}/{n_of_pages}]"), id="current"),
             Button(Const(lexicon["forward"]), id="next", on_click=increase_page)
         ),
-        main_menu_button,
+        Start(
+            Const(lexicon["to_main_menu"]),
+            id="main_menu",
+            state=states.UserMenuSG.main,
+            on_click=close_current_dialog
+        ),
         state=states.RequestsHistorySG.main,
         getter=get_reports_data
     ),
@@ -36,7 +40,12 @@ requests_history = Dialog(
         Format(lexicon["show_history_report"]),
         Button(Const(lexicon["delete"]), id="delete_report", on_click=delete_request),
         Back(Const(lexicon["back"]), id="back"),
-        main_menu_button,
+        Start(
+            Const(lexicon["to_main_menu"]),
+            id="main_menu",
+            state=states.UserMenuSG.main,
+            on_click=close_current_dialog
+        ),
         state=states.RequestsHistorySG.report,
         getter=get_report_data
     )

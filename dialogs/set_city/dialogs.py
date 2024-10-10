@@ -5,6 +5,7 @@ from aiogram_dialog.widgets.text import Format, Const
 
 import states
 from api_requests.city_validator import validate_city
+from dialogs.common.handlers import close_current_dialog
 from dialogs.set_city.getters import get_user_city
 from dialogs.set_city.handlers import correct_city_setup, error_city_setup
 from lexicon import lexicon
@@ -18,7 +19,12 @@ set_city = Dialog(
             on_success=correct_city_setup,
             on_error=error_city_setup
         ),
-        Cancel(Const(lexicon["cancel"]), id='button_cancel'),
+        Start(
+            Const(lexicon["cancel"]),
+            id="main_menu",
+            state=states.UserMenuSG.main,
+            on_click=close_current_dialog
+        ),
         state=states.SetCitySG.setup_city,
     ),
     Window(
@@ -31,7 +37,8 @@ set_city = Dialog(
         Start(
             Const(lexicon["to_main_menu"]),
             id="main_menu",
-            state=states.UserMenuSG.main
+            state=states.UserMenuSG.main,
+            on_click=close_current_dialog
         ),
         state=states.SetCitySG.city_accepted,
         getter=get_user_city

@@ -1,13 +1,14 @@
 import operator
 
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.kbd import Button, Column, Select, Row, Cancel
+from aiogram_dialog.widgets.kbd import Button, Column, Select, Row, Start
 from aiogram_dialog.widgets.text import Const, Format
 
 import states
 from lexicon import lexicon
-from .getters import get_users_data
-from .handlers import decrease_page, increase_page, on_user_selected
+from dialogs.list_of_users.getters import get_users_data
+from dialogs.list_of_users.handlers import decrease_page, increase_page, on_user_selected
+from dialogs.common.handlers import close_current_dialog
 
 user_list = Dialog(
     Window(
@@ -26,7 +27,12 @@ user_list = Dialog(
             Button(Format("[{page}/{n_of_pages}]"), id="current"),
             Button(Const(lexicon["forward"]), id="next", on_click=increase_page)
         ),
-        Cancel(Const(lexicon["to_main_menu"]), id="button_cancel"),
+        Start(
+            Const(lexicon["to_main_menu"]),
+            id="main_menu",
+            state=states.UserMenuSG.main,
+            on_click=close_current_dialog
+        ),
         getter=get_users_data,
         state=states.UsersListSG.main,
     )
