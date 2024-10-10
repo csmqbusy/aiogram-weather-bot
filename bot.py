@@ -6,6 +6,7 @@ from aiogram_dialog import setup_dialogs
 
 from database.orm import db_client
 from handlers import admin_router, user_router
+from handlers.bot_main_menu import set_main_menu
 from settings.config import settings
 from dialogs import all_dialogs
 
@@ -16,6 +17,7 @@ dp = Dispatcher(storage=storage)
 if __name__ == '__main__':
     basicConfig(level=INFO)
     db_client.create_tables()
+    dp.startup.register(set_main_menu)
     dp.include_router(admin_router)
     dp.include_router(user_router)
     dp.include_routers(*all_dialogs)
