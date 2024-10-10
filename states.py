@@ -22,6 +22,10 @@ class OtherCityWeatherSG(StatesGroup):
     weather = State()
 
 
+class RandomCityWeatherSG(StatesGroup):
+    weather = State()
+
+
 class RequestsHistorySG(StatesGroup):
     main = State()
     report = State()

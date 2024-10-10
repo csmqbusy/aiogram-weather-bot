@@ -22,6 +22,12 @@ user_menu = Dialog(
             on_click=close_current_dialog
         ),
         Start(
+            Const(lexicon["random_city_weather"]),
+            id="random_city_weather",
+            state=states.RandomCityWeatherSG.weather,
+            on_click=close_current_dialog
+        ),
+        Start(
             Const(lexicon["history"]),
             id="requests_history",
             state=states.RequestsHistorySG.main,
