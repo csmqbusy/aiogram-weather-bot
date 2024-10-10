@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 
 from database.models import WeatherReportsORM
+from utils.info_from_weather_code import get_emoji_from_code, get_weather_condition_from_code
 
 
 def prepare_weather_data(w_data: dict) -> dict:
@@ -12,6 +13,10 @@ def prepare_weather_data(w_data: dict) -> dict:
     date = f"{weekday} {localtime.day} {month} {localtime.year}г."
     pressure_mm = int(w_data['current']['pressure_mb']) * 0.75
     icon = w_data['current']['condition']['icon']
+    code = w_data['current']['condition']['code']
+    is_day = bool(w_data['current']['is_day'])
+    emoji = get_emoji_from_code(code)
+    weather_condition = get_weather_condition_from_code(code, is_day)
 
     weather_data = {
         "icon": icon,
@@ -22,7 +27,8 @@ def prepare_weather_data(w_data: dict) -> dict:
         "feels_like": w_data['current']['feelslike_c'],
         "wind_speed": w_data['current']['wind_kph'],
         "pressure": str(pressure_mm),
-        "visibility": w_data['current']['vis_km']
+        "visibility": w_data['current']['vis_km'],
+        "weather_condition": f"{emoji} {weather_condition}",
     }
     return weather_data
 
@@ -41,7 +47,8 @@ def prepare_report_data(report: WeatherReportsORM) -> dict:
         "feels_like": report.feels_like,
         "wind_speed": report.wind_speed,
         "pressure": report.pressure_mm,
-        "visibility": report.visibility
+        "visibility": report.visibility,
+        "weather_condition": report.weather_condition
     }
     return w_data
 

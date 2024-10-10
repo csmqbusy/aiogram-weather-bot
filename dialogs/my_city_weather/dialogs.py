@@ -1,5 +1,5 @@
 from aiogram_dialog import Window, Dialog
-from aiogram_dialog.widgets.kbd import Start, Group
+from aiogram_dialog.widgets.kbd import Start
 from aiogram_dialog.widgets.text import Format, Const
 
 import states

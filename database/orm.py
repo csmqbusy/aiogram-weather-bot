@@ -31,13 +31,29 @@ class DBClient:
             return user.city
 
     @staticmethod
-    def create_weather_report(tg_id, temp, feels_like, wind_speed, pressure_mm, city, country, visibility):
+    def create_weather_report(
+            tg_id: int,
+            temp: float,
+            feels_like: float,
+            wind_speed: float,
+            pressure_mm: float,
+            city: str,
+            country: str,
+            visibility: float,
+            weather_condition: str
+    ):
         with session_factory() as session:
             user = session.query(UsersORM).filter(UsersORM.tg_id == tg_id).first()
             report = WeatherReportsORM(
-                owner=user.id, temp=temp, feels_like=feels_like,
-                wind_speed=wind_speed, pressure_mm=pressure_mm, city=city,
-                country=country, visibility=visibility
+                owner=user.id,
+                temp=temp,
+                feels_like=feels_like,
+                wind_speed=wind_speed,
+                pressure_mm=pressure_mm,
+                city=city,
+                country=country,
+                visibility=visibility,
+                weather_condition=weather_condition
             )
             session.add(report)
             session.commit()
@@ -88,10 +104,3 @@ class DBClient:
 
 
 db_client = DBClient()
-
-
-
-
-
-
-
