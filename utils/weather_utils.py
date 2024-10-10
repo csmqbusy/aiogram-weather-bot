@@ -11,7 +11,7 @@ def prepare_weather_data(w_data: dict) -> dict:
     month = get_month_name_translation(localtime.strftime("%B"))
     weekday = get_weekday_name_translation(calendar.day_name[localtime.weekday()])
     date = f"{weekday} {localtime.day} {month} {localtime.year}г."
-    pressure_mm = int(w_data['current']['pressure_mb']) * 0.75
+    pressure_mm = round(float(w_data['current']['pressure_mb']) * 0.75, 2)
     icon = w_data['current']['condition']['icon']
     code = w_data['current']['condition']['code']
     is_day = bool(w_data['current']['is_day'])
@@ -26,7 +26,7 @@ def prepare_weather_data(w_data: dict) -> dict:
         "temp": w_data['current']['temp_c'],
         "feels_like": w_data['current']['feelslike_c'],
         "wind_speed": w_data['current']['wind_kph'],
-        "pressure": str(pressure_mm),
+        "pressure": pressure_mm,
         "visibility": w_data['current']['vis_km'],
         "weather_condition": f"{emoji} {weather_condition}",
     }

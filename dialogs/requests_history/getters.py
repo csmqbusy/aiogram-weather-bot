@@ -11,7 +11,7 @@ async def get_reports_data(dialog_manager: DialogManager, event_from_user: User,
     if dialog_manager.dialog_data.get("history_page") is None:
         dialog_manager.dialog_data.update(dialog_manager.start_data)
     current_page = dialog_manager.dialog_data.get("history_page")
-    reports_orm = db_client.get_user_reports(event_from_user.id)
+    reports_orm = await db_client.get_user_reports(event_from_user.id)
     reports = prepare_reports_for_dialog(reports_orm)
     n_items_per_page = 5
     n_of_reports = len(reports)
@@ -37,5 +37,5 @@ def prepare_reports_for_dialog(reports_orm: list):
 
 async def get_report_data(dialog_manager: DialogManager, event_from_user: User, **kwargs):
     report_id = dialog_manager.dialog_data.get("report_id")
-    report = db_client.get_report(report_id)
+    report = await db_client.get_report(report_id)
     return prepare_report_data(report)

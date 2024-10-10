@@ -20,6 +20,6 @@ async def correct_city_setup(message: Message,
                              dialog_manager: DialogManager,
                              text: str):
     user_city = message.text
-    db_client.set_user_city(message.from_user.id, user_city)
+    await db_client.set_user_city(message.from_user.id, user_city)
     dialog_manager.dialog_data.update(user_city=user_city)
     await dialog_manager.next()

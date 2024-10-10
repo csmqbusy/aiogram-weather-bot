@@ -9,7 +9,7 @@ async def get_users_data(dialog_manager: DialogManager, **kwargs):
     if dialog_manager.dialog_data.get("userlist_page") is None:
         dialog_manager.dialog_data.update(dialog_manager.start_data)
     current_page = dialog_manager.dialog_data.get("userlist_page")
-    users_orm = db_client.get_all_users()
+    users_orm = await db_client.get_all_users()
     users = prepare_users_for_dialog(users_orm)
     n_items_per_page = 5
     n_of_users = len(users)

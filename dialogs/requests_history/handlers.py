@@ -20,11 +20,12 @@ async def decrease_page(callback: CallbackQuery, widget: Any, dialog_manager: Di
 
 
 async def on_report_selected(callback: CallbackQuery, widget: Any, dialog_manager: DialogManager, item_id: str):
-    dialog_manager.dialog_data.update(report_id=item_id)
+    report_id = int(item_id)
+    dialog_manager.dialog_data.update(report_id=report_id)
     await dialog_manager.next()
 
 
 async def delete_request(callback: CallbackQuery, widget: Any, dialog_manager: DialogManager):
     report_id = dialog_manager.dialog_data.get("report_id")
-    db_client.delete_user_report(report_id)
+    await db_client.delete_user_report(report_id)
     await dialog_manager.back()

@@ -1,3 +1,4 @@
+import asyncio
 from logging import basicConfig, INFO
 
 from aiogram import Bot, Dispatcher
@@ -14,12 +15,17 @@ bot = Bot(token=settings.BOT_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
-if __name__ == '__main__':
+
+async def main():
     basicConfig(level=INFO)
-    db_client.create_tables()
+    await db_client.create_tables()
     dp.startup.register(set_main_menu)
     dp.include_router(admin_router)
     dp.include_router(user_router)
     dp.include_routers(*all_dialogs)
     setup_dialogs(dp)
-    dp.run_polling(bot, skip_updates=True)
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
+
+if __name__ == '__main__':
+    asyncio.run(main())

@@ -12,7 +12,7 @@ router = Router()
 
 @router.message(Command(commands="start"))
 async def start_cmd(message: Message):
-    db_client.add_user(message.from_user.id)
+    await db_client.add_user(message.from_user.id)
     text = lexicon["/start"].format(message.from_user.first_name)
     await message.answer(text=text)
 
