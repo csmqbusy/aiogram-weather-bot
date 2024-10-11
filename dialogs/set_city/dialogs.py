@@ -32,7 +32,8 @@ set_city = Dialog(
         Start(
             Const(lexicon["get_the_weather_in_my_city"]),
             id="my_city_weather",
-            state=states.MyCityWeatherSG.main
+            state=states.MyCityWeatherSG.main,
+            on_click=close_current_dialog
         ),
         Start(
             Const(lexicon["to_main_menu"]),

@@ -1,5 +1,5 @@
 import asyncio
-from logging import basicConfig, INFO
+import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -17,7 +17,7 @@ dp = Dispatcher(storage=storage)
 
 
 async def main():
-    basicConfig(level=INFO)
+    logging.basicConfig(level=logging.INFO)
     await db_client.create_tables()
     dp.startup.register(set_main_menu)
     dp.include_router(admin_router)
