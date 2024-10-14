@@ -6,7 +6,8 @@ from database.orm import db_client
 from utils.weather_utils import prepare_weather_data
 
 
-async def get_weather(dialog_manager: DialogManager, event_from_user: User, **kwargs):
+async def get_weather(dialog_manager: DialogManager,
+                      event_from_user: User, **kwargs):
     user_id = event_from_user.id
     user_city = await db_client.get_user_city(user_id)
     if user_city is None:

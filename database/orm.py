@@ -1,7 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from database.database import sync_engine, session_factory, async_engine, async_session_factory
+from database.database import (sync_engine, session_factory, async_engine,
+                               async_session_factory)
 from database.models import Base, UsersORM, WeatherReportsORM
 
 
@@ -13,7 +14,8 @@ class SyncDBClient:
     @staticmethod
     def add_user(tg_id):
         with session_factory() as session:
-            user = session.query(UsersORM).filter(UsersORM.tg_id == tg_id).first()
+            result = session.query(UsersORM).filter(UsersORM.tg_id == tg_id)
+            user = result.first()
             if user is None:
                 session.add(UsersORM(tg_id=tg_id))
                 session.commit()
@@ -21,14 +23,16 @@ class SyncDBClient:
     @staticmethod
     def set_user_city(tg_id, city):
         with session_factory() as session:
-            user = session.query(UsersORM).filter(UsersORM.tg_id == tg_id).first()
+            result = session.query(UsersORM).filter(UsersORM.tg_id == tg_id)
+            user = result.first()
             user.city = city
             session.commit()
 
     @staticmethod
     def get_user_city(tg_id):
         with session_factory() as session:
-            user = session.query(UsersORM).filter(UsersORM.tg_id == tg_id).first()
+            result = session.query(UsersORM).filter(UsersORM.tg_id == tg_id)
+            user = result.first()
             return user.city
 
     @staticmethod
@@ -44,7 +48,8 @@ class SyncDBClient:
             weather_condition: str
     ):
         with session_factory() as session:
-            user = session.query(UsersORM).filter(UsersORM.tg_id == tg_id).first()
+            result = session.query(UsersORM).filter(UsersORM.tg_id == tg_id)
+            user = result.first()
             report = WeatherReportsORM(
                 owner=user.id,
                 temp=temp,
@@ -62,7 +67,8 @@ class SyncDBClient:
     @staticmethod
     def get_user_reports(tg_id):
         with session_factory() as session:
-            user = session.query(UsersORM).filter(UsersORM.tg_id == tg_id).first()
+            result = session.query(UsersORM).filter(UsersORM.tg_id == tg_id)
+            user = result.first()
             return user.reports
 
     @staticmethod
@@ -81,7 +87,9 @@ class SyncDBClient:
     @staticmethod
     def get_all_users():
         with session_factory() as session:
-            users = session.query(UsersORM).options(selectinload(UsersORM.reports)).all()
+            users = session.query(UsersORM).options(
+                selectinload(UsersORM.reports)
+            ).all()
             return users
 
     @staticmethod
@@ -99,8 +107,7 @@ class SyncDBClient:
             user_4 = UsersORM(tg_id=400, city="Пермь")
             user_5 = UsersORM(tg_id=500, city="Астана")
             user_6 = UsersORM(tg_id=600, city="Мурманск")
-            user_7 = UsersORM(tg_id=700, city="Тула")
-            session.add_all([user_1, user_2, user_3, user_4, user_5, user_6, user_7])
+            session.add_all([user_1, user_2, user_3, user_4, user_5, user_6])
             session.commit()
 
 

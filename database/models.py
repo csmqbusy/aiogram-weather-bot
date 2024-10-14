@@ -16,7 +16,10 @@ class UsersORM(Base):
         server_default=text("TIMEZONE ('utc', now())"),
         nullable=False
     )
-    reports: Mapped[list["WeatherReportsORM"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    reports: Mapped[list["WeatherReportsORM"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return f"{self.id}, {self.tg_id}"
@@ -36,10 +39,14 @@ class WeatherReportsORM(Base):
     wind_speed: Mapped[float] = mapped_column(nullable=False)
     pressure_mm: Mapped[float] = mapped_column(nullable=False)
     visibility: Mapped[float] = mapped_column(nullable=False)
-    weather_condition: Mapped[str] = mapped_column(nullable=False, server_default="Данные отсутствуют")
+    weather_condition: Mapped[str] = mapped_column(
+        nullable=False, server_default="Данные отсутствуют")
     city: Mapped[str] = mapped_column(nullable=False)
     country: Mapped[str] = mapped_column(nullable=True)
     user: Mapped[list["UsersORM"]] = relationship(back_populates="reports")
 
     def __repr__(self):
-        return f"{self.city}, {self.date.day}.{self.date.month}.{self.date.year}, {self.temp} °C"
+        text = (f"{self.city}, "
+                f"{self.date.day}.{self.date.month}.{self.date.year}, "
+                f"{self.temp} °C")
+        return text

@@ -10,10 +10,10 @@ async def get_weather_data(city: str) -> dict:
     while True:
         try:
             weather_data = await _get_data(city)
-            return weather_data
-        except ReadTimeout:
-            logging.info(f"Request to http://api.weatherapi.com timed out")
+        except Exception as e:
+            logging.info(f"Request to http://api.weatherapi.com: {e}")
             continue
+        return weather_data
 
 
 async def _get_data(city: str) -> dict:

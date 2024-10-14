@@ -1,13 +1,14 @@
 import operator
 
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.kbd import Row, Button, Cancel, Column, Select, Back, Start
+from aiogram_dialog.widgets.kbd import Row, Button, Column, Select, Back, Start
 from aiogram_dialog.widgets.text import Const, Format
 
 import states
 from dialogs.common.handlers import close_current_dialog
 from dialogs.requests_history.getters import get_reports_data, get_report_data
-from dialogs.requests_history.handlers import decrease_page, increase_page, on_report_selected, delete_request
+from dialogs.requests_history.handlers import (
+    decrease_page, increase_page, on_report_selected, delete_request)
 from lexicon import lexicon
 
 requests_history = Dialog(
@@ -38,7 +39,8 @@ requests_history = Dialog(
     ),
     Window(
         Format(lexicon["show_history_report"]),
-        Button(Const(lexicon["delete"]), id="delete_report", on_click=delete_request),
+        Button(Const(lexicon["delete"]), id="delete_report",
+               on_click=delete_request),
         Back(Const(lexicon["back"]), id="back"),
         Start(
             Const(lexicon["to_main_menu"]),

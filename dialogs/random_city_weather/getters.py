@@ -7,7 +7,8 @@ from database.orm import db_client
 from utils.weather_utils import prepare_weather_data
 
 
-async def get_random_city_weather(dialog_manager: DialogManager, event_from_user: User, **kwargs):
+async def get_random_city_weather(dialog_manager: DialogManager,
+                                  event_from_user: User, **kwargs):
     weather_full_data = {"error": "blank"}
     while "error" in weather_full_data:
         random_city = rcoc.get_random_city()

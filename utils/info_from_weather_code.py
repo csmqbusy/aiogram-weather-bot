@@ -96,8 +96,10 @@ def get_weather_condition_from_code(code: int, is_day: bool) -> str:
                                 'night_text': 'В отдельных районах умеренный или сильный снег с '
                                               'грозой'}}
     if is_day:
-        weather_condition = code_to_condition.get(code, "Данные отсутствуют").get("day_text")
+        weather_condition = (
+            code_to_condition.get(code, "Данные отсутствуют").get("day_text"))
     else:
-        weather_condition = code_to_condition.get(code, "Данные отсутствуют").get("night_text")
+        weather_condition = (
+            code_to_condition.get(code, "Данные отсутствуют").get("night_text"))
 
     return weather_condition

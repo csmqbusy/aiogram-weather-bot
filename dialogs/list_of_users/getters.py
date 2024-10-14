@@ -28,7 +28,8 @@ async def get_users_data(dialog_manager: DialogManager, **kwargs):
 def prepare_users_for_dialog(users_orm: list):
     users = []
     for user in users_orm:
-        conn_date = f"{user.connection_date.day}.{user.connection_date.month}.{user.connection_date.year}"
+        conn_date = (f"{user.connection_date.day}.{user.connection_date.month}"
+                     f".{user.connection_date.year}")
         user_info = (user.id, user.tg_id, conn_date, len(user.reports))
         users.append(user_info)
     return sorted(users, key=lambda item: item[0])

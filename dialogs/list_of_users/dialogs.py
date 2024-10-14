@@ -7,7 +7,8 @@ from aiogram_dialog.widgets.text import Const, Format
 import states
 from lexicon import lexicon
 from dialogs.list_of_users.getters import get_users_data
-from dialogs.list_of_users.handlers import decrease_page, increase_page, on_user_selected
+from dialogs.list_of_users.handlers import (decrease_page, increase_page,
+                                            on_user_selected)
 from dialogs.common.handlers import close_current_dialog
 
 user_list = Dialog(
