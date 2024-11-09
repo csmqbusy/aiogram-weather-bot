@@ -4,10 +4,9 @@ services:
 
   postgres:
     image: postgres:16-alpine
-    # поскольку это тестовый стенд, то не перезагружаем автоматически
     restart: "always"
     ports:
-      - "127.0.0.1:5432:5432"
+      - "5432:5432"
     environment:
       POSTGRES_USER: superuser
       POSTGRES_PASSWORD: superpassword
