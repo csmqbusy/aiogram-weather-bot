@@ -15,21 +15,5 @@ services:
     volumes:
       - "weather-bot-postgres:/var/lib/postgresql/data"
 
-  pgadmin:
-    image: dpage/pgadmin4:8.9
-    # поскольку это тестовый стенд, то не перезагружаем автоматически
-    restart: "always"
-    ports:
-      - "127.0.0.1:8080:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: a@a.com
-      PGADMIN_DEFAULT_PASSWORD: pgadmin
-    volumes:
-      - "weather-bot-pgadmin:/var/lib/pgadmin"
-    depends_on:
-      - postgres
-
-
 volumes:
   weather-bot-postgres:
-  weather-bot-pgadmin:

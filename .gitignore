@@ -3,9 +3,9 @@ __pycache__/
 
 .venv
 .idea
+
 .env
 
-TODO.txt
 weather_example.json
 reference_message.txt
 test.py
