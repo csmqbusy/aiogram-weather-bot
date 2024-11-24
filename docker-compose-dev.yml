@@ -1,7 +1,10 @@
+name: "weather-bot-db"
+
 services:
-  app-db:
+
+  postgres:
     image: postgres:16-alpine
-    restart: unless-stopped
+    restart: on-failure
     ports:
       - "5432:5432"
     environment:
@@ -10,15 +13,6 @@ services:
       POSTGRES_DB: weatherbot
     volumes:
       - "weather-bot-postgres:/var/lib/postgresql/data"
-
-  app:
-    build:
-      context: .
-    container_name: app
-    env_file:
-      - .env
-    depends_on:
-      - postgres
 
 volumes:
   weather-bot-postgres:
