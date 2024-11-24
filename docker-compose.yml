@@ -4,7 +4,7 @@ services:
 
   postgres:
     image: postgres:16-alpine
-    restart: "always"
+    restart: on-failure
     ports:
       - "5432:5432"
     environment:
