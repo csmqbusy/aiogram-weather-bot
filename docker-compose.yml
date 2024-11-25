@@ -1,5 +1,5 @@
 services:
-  app-db:
+  postgres-db:
     image: postgres:16-alpine
     restart: unless-stopped
     ports:
@@ -18,7 +18,7 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres
+      - postgres-db
 
 volumes:
   weather-bot-postgres:

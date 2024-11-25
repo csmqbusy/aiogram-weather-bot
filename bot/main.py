@@ -1,3 +1,5 @@
+import sys
+print(sys.path)
 import asyncio
 import logging
 
@@ -5,11 +7,11 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
 
-from database.orm import db_client
-from handlers import admin_router, user_router
-from services.set_commands import set_commands
-from settings.config import settings
-from dialogs import all_dialogs
+from bot.database.orm import db_client
+from bot.handlers import admin_router, user_router
+from bot.services.set_commands import set_commands
+from bot.settings.config import settings
+from bot.dialogs import all_dialogs
 
 bot = Bot(token=settings.BOT_TOKEN)
 storage = MemoryStorage()

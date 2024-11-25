@@ -2,4 +2,4 @@
 
 alembic upgrade head
 
-python bot/main.py
+python -m bot.main
