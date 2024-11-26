@@ -1,6 +1,6 @@
 import calendar
-import json
 from datetime import datetime
+from typing import Any
 
 import countryflag
 from translate import Translator
@@ -14,7 +14,7 @@ from bot.utils.info_from_weather_code import (
 translator = Translator(from_lang="ru", to_lang="en")
 
 
-def prepare_weather_data(w_data: dict) -> dict:
+def prepare_weather_data(w_data: dict[str, Any]) -> dict[str, str | float]:
     localtime = datetime.strptime(
         w_data["location"]["localtime"], "%Y-%m-%d %H:%M"
     )
@@ -48,7 +48,7 @@ def prepare_weather_data(w_data: dict) -> dict:
     return weather_data
 
 
-def prepare_report_data(report: WeatherReportsORM) -> dict:
+def prepare_report_data(report: WeatherReportsORM) -> dict[str, str]:
     localtime = report.date
     month = _get_month_name_translation(localtime.strftime("%B"))
     weekday = _get_weekday_name_translation(
@@ -60,12 +60,12 @@ def prepare_report_data(report: WeatherReportsORM) -> dict:
         "date": date,
         "city": report.city,
         "country": report.country,
-        "temp": report.temp,
-        "feels_like": report.feels_like,
-        "wind_speed": report.wind_speed,
-        "pressure": report.pressure_mm,
-        "visibility": report.visibility,
-        "weather_condition": report.weather_condition
+        "temp": str(report.temp),
+        "feels_like": str(report.feels_like),
+        "wind_speed": str(report.wind_speed),
+        "pressure": str(report.pressure_mm),
+        "visibility": str(report.visibility),
+        "weather_condition": str(report.weather_condition),
     }
     return w_data
 
@@ -74,7 +74,7 @@ def get_country_emoji(country: str) -> str:
     if _is_russian_country_name(country):
         country = _translate_country_name(country)
     try:
-        country_emoji = countryflag.getflag([country])
+        country_emoji = str(countryflag.getflag([country]))
     except Exception:  # noqa
         country_emoji = "🏳"
     return country_emoji
@@ -91,7 +91,7 @@ def _is_russian_country_name(country: str) -> bool:
 
 
 def _translate_country_name(country: str) -> str:
-    country_en = translator.translate(country)
+    country_en = str(translator.translate(country))
     return country_en
 
 
@@ -124,10 +124,3 @@ def _get_weekday_name_translation(weekday: str) -> str:
         "sunday": "воскресенье"
     }
     return days[weekday.lower()]
-
-
-if __name__ == '__main__':
-    filepath = "/weather_example.json"
-    with open(filepath, 'r') as f:
-        data = json.load(f)
-    prepare_weather_data(data)
