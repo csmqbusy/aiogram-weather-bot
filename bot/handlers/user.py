@@ -11,12 +11,12 @@ router = Router()
 
 
 @router.message(Command(commands="start"))
-async def start_cmd(message: Message):
+async def start_cmd(message: Message) -> None:
     await db_client.add_user(message.from_user.id)
     text = lexicon["/start"].format(message.from_user.first_name)
     await message.answer(text=text)
 
 
 @router.message(Command(commands="menu"))
-async def menu_cmd(message: Message, dialog_manager: DialogManager):
+async def menu_cmd(message: Message, dialog_manager: DialogManager) -> None:
     await dialog_manager.start(state=states.UserMenuSG.main)

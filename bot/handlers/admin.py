@@ -11,5 +11,5 @@ router.message.filter(IsAdmin())
 
 
 @router.message(Command(commands="admin_menu"))
-async def admin_panel(message: Message, dialog_manager: DialogManager):
+async def admin_panel(message: Message, dialog_manager: DialogManager) -> None:
     await dialog_manager.start(state=states.AdminMenuSG.main)
