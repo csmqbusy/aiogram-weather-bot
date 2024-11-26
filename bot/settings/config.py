@@ -1,17 +1,18 @@
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
 
-    DB_HOST: str | None = None
-    DB_PORT: int | None = None
-    DB_USER: str | None = None
-    DB_PASS: str | None = None
-    DB_NAME: str | None = None
-    API_KEY: str | None = None
-    BOT_TOKEN: str | None = None
-    ADMINS_ID: list[int] | None = None
+    DB_HOST: str = ""
+    DB_PORT: int = 5432
+    DB_USER: str = ""
+    DB_PASS: str = ""
+    DB_NAME: str = ""
+    API_KEY: str = ""
+    BOT_TOKEN: str = ""
+    ADMINS_ID: list[int] = Field(default_factory=list)
 
     @property
     def DATABASE_URL_psycopg(self) -> str:
