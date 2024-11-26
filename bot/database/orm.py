@@ -1,118 +1,9 @@
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from bot.database.database import (
-    sync_engine,
-    session_factory,
-    async_engine,
-    async_session_factory,
-)
+from bot.database.database import async_engine, async_session_factory
+from bot.database.exceptions import DatabaseError
 from bot.database.models import Base, UsersORM, WeatherReportsORM
-
-
-class SyncDBClient:
-    @staticmethod
-    def create_tables():
-        Base.metadata.create_all(sync_engine)
-
-    @staticmethod
-    def add_user(tg_id):
-        with session_factory() as session:
-            result = session.query(UsersORM).filter(UsersORM.tg_id == tg_id)
-            user = result.first()
-            if user is None:
-                session.add(UsersORM(tg_id=tg_id))
-                session.commit()
-
-    @staticmethod
-    def set_user_city(tg_id, city):
-        with session_factory() as session:
-            result = session.query(UsersORM).filter(UsersORM.tg_id == tg_id)
-            user = result.first()
-            user.city = city
-            session.commit()
-
-    @staticmethod
-    def get_user_city(tg_id):
-        with session_factory() as session:
-            result = session.query(UsersORM).filter(UsersORM.tg_id == tg_id)
-            user = result.first()
-            return user.city
-
-    @staticmethod
-    def create_weather_report(
-            tg_id: int,
-            temp: float,
-            feels_like: float,
-            wind_speed: float,
-            pressure_mm: float,
-            city: str,
-            country: str,
-            visibility: float,
-            weather_condition: str
-    ):
-        with session_factory() as session:
-            result = session.query(UsersORM).filter(UsersORM.tg_id == tg_id)
-            user = result.first()
-            report = WeatherReportsORM(
-                owner=user.id,
-                temp=temp,
-                feels_like=feels_like,
-                wind_speed=wind_speed,
-                pressure_mm=pressure_mm,
-                city=city,
-                country=country,
-                visibility=visibility,
-                weather_condition=weather_condition
-            )
-            session.add(report)
-            session.commit()
-
-    @staticmethod
-    def get_user_reports(tg_id):
-        with session_factory() as session:
-            result = session.query(UsersORM).filter(UsersORM.tg_id == tg_id)
-            user = result.first()
-            return user.reports
-
-    @staticmethod
-    def get_report(report_id):
-        with session_factory() as session:
-            report = session.get(WeatherReportsORM, report_id)
-            return report
-
-    @staticmethod
-    def delete_user_report(report_id):
-        with session_factory() as session:
-            report = session.get(WeatherReportsORM, report_id)
-            session.delete(report)
-            session.commit()
-
-    @staticmethod
-    def get_all_users():
-        with session_factory() as session:
-            users = session.query(UsersORM).options(
-                selectinload(UsersORM.reports)
-            ).all()
-            return users
-
-    @staticmethod
-    def get_all_reports():
-        with session_factory() as session:
-            reports = session.query(WeatherReportsORM).all()
-            return reports
-
-    @staticmethod
-    def add_fake_users():
-        with session_factory() as session:
-            user_1 = UsersORM(tg_id=100, city="Томск")
-            user_2 = UsersORM(tg_id=200, city="Минск")
-            user_3 = UsersORM(tg_id=300, city="Хабаровск")
-            user_4 = UsersORM(tg_id=400, city="Пермь")
-            user_5 = UsersORM(tg_id=500, city="Астана")
-            user_6 = UsersORM(tg_id=600, city="Мурманск")
-            session.add_all([user_1, user_2, user_3, user_4, user_5, user_6])
-            session.commit()
 
 
 class AsyncDBClient:
@@ -122,13 +13,17 @@ class AsyncDBClient:
             await conn.run_sync(Base.metadata.create_all)
 
     @staticmethod
-    async def add_user(tg_id):
+    async def add_user(tg_id) -> UsersORM:
         async with async_session_factory() as session:
             query = select(UsersORM).filter(UsersORM.tg_id == tg_id)
             user = (await session.execute(query)).scalar()
             if user is None:
                 session.add(UsersORM(tg_id=tg_id))
                 await session.commit()
+                user = (await session.execute(query)).scalar()
+                if user is None:
+                    raise DatabaseError('User does not exist')
+            return user
 
     @staticmethod
     async def set_user_city(tg_id, city):
@@ -158,8 +53,7 @@ class AsyncDBClient:
             weather_condition: str
     ):
         async with async_session_factory() as session:
-            query = select(UsersORM).filter(UsersORM.tg_id == tg_id)
-            user = (await session.execute(query)).scalar()
+            user = await db_client.add_user(tg_id)
             report = WeatherReportsORM(
                 owner=user.id,
                 temp=temp,

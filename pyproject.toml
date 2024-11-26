@@ -6,6 +6,7 @@ authors = ["csmqbusy"]
 readme = "README.md"
 
 [tool.mypy]
+ignore_missing_imports = true
 strict = true
 
 [tool.poetry.dependencies]
