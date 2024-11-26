@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
@@ -8,36 +10,54 @@ from bot.database.models import Base, UsersORM, WeatherReportsORM
 
 class AsyncDBClient:
     @staticmethod
-    async def create_tables():
+    async def create_tables() -> None:
         async with async_engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
-    @staticmethod
-    async def add_user(tg_id) -> UsersORM:
+    @classmethod
+    async def _get_user(
+            cls,
+            tg_id: int,
+            *,
+            load_reports: bool = False,
+    ) -> UsersORM | None:
         async with async_session_factory() as session:
-            query = select(UsersORM).filter(UsersORM.tg_id == tg_id)
+            if load_reports:
+                query = select(UsersORM).filter(
+                    UsersORM.tg_id == tg_id
+                ).options(selectinload(UsersORM.reports))
+            else:
+                query = select(UsersORM).filter(UsersORM.tg_id == tg_id)
             user = (await session.execute(query)).scalar()
+            return user
+
+    @classmethod
+    async def add_user(cls, tg_id: int) -> UsersORM:
+        async with async_session_factory() as session:
+            user = await cls._get_user(tg_id)
             if user is None:
                 session.add(UsersORM(tg_id=tg_id))
                 await session.commit()
-                user = (await session.execute(query)).scalar()
+                user = await cls._get_user(tg_id)
                 if user is None:
                     raise DatabaseError('User does not exist')
             return user
 
-    @staticmethod
-    async def set_user_city(tg_id, city):
+    @classmethod
+    async def set_user_city(cls, tg_id: int, city: str) -> None:
         async with async_session_factory() as session:
-            query = select(UsersORM).filter(UsersORM.tg_id == tg_id)
-            user = (await session.execute(query)).scalar()
+            user = await cls._get_user(tg_id)
+            if user is None:
+                raise DatabaseError(f"User with tg_id={tg_id} does not exist")
             user.city = city
             await session.commit()
 
-    @staticmethod
-    async def get_user_city(tg_id):
+    @classmethod
+    async def get_user_city(cls, tg_id: int) -> str:
         async with async_session_factory() as session:
-            query = select(UsersORM).filter(UsersORM.tg_id == tg_id)
-            user = (await session.execute(query)).scalar()
+            user = await cls._get_user(tg_id)
+            if user is None:
+                raise DatabaseError(f"User with tg_id={tg_id} does not exist")
             return user.city
 
     @staticmethod
@@ -51,7 +71,7 @@ class AsyncDBClient:
             country: str,
             visibility: float,
             weather_condition: str
-    ):
+    ) -> None:
         async with async_session_factory() as session:
             user = await db_client.add_user(tg_id)
             report = WeatherReportsORM(
@@ -69,39 +89,38 @@ class AsyncDBClient:
             await session.commit()
 
     @staticmethod
-    async def get_user_reports(tg_id):
+    async def get_user_reports(tg_id: int) -> list[WeatherReportsORM]:
         async with async_session_factory() as session:
-            query = (
-                select(UsersORM)
-                .filter(UsersORM.tg_id == tg_id)
-                .options(selectinload(UsersORM.reports))
-            )
-            result = await session.execute(query)
-            user = result.scalar()
-            return user.reports
+            user = await db_client._get_user(tg_id, load_reports=True)
+            if user is None:
+                raise DatabaseError(f"User with tg_id={tg_id} does not exist")
+            reports = user.reports
+            return reports
 
-    @staticmethod
-    async def get_report(report_id):
+    @classmethod
+    async def get_report(cls, report_id: int) -> WeatherReportsORM:
         async with async_session_factory() as session:
             report = await session.get(WeatherReportsORM, report_id)
+            if report is None:
+                raise DatabaseError(f"Can't get report with id {report_id}")
             return report
 
-    @staticmethod
-    async def delete_user_report(report_id):
+    @classmethod
+    async def delete_user_report(cls, report_id: int) -> None:
         async with async_session_factory() as session:
-            report = await session.get(WeatherReportsORM, report_id)
+            report = cls.get_report(report_id)
             await session.delete(report)
             await session.commit()
 
     @staticmethod
-    async def get_all_users():
+    async def get_all_users() -> Sequence[UsersORM]:
         async with async_session_factory() as session:
             query = select(UsersORM).options(selectinload(UsersORM.reports))
             users = (await session.execute(query)).scalars().all()
             return users
 
     @staticmethod
-    async def get_all_reports():
+    async def get_all_reports() -> Sequence[WeatherReportsORM]:
         async with async_session_factory() as session:
             query = select(WeatherReportsORM)
             reports = (await session.execute(query)).scalars().all()
