@@ -19,7 +19,7 @@ class UsersORM(Base):
         back_populates="user", cascade="all, delete-orphan"
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.id}, {self.tg_id}"
 
 
@@ -43,7 +43,7 @@ class WeatherReportsORM(Base):
     country: Mapped[str] = mapped_column(nullable=True)
     user: Mapped[list["UsersORM"]] = relationship(back_populates="reports")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         message = (
             f"{self.city}, "
             f"{self.date.day}.{self.date.month}.{self.date.year}, "
