@@ -1,14 +1,15 @@
 import math
-from typing import Any
+from typing import Any, Iterable
 
 from aiogram_dialog import DialogManager
 
+from bot.database.models import UsersORM
 from bot.database.orm import db_client
 
 
 async def get_users_data(
         dialog_manager: DialogManager,
-        **kwargs,
+        **kwargs: dict[str, Any],
 ) -> dict[str, Any]:
     if dialog_manager.dialog_data.get("userlist_page") is None:
         dialog_manager.dialog_data.update(dialog_manager.start_data)
@@ -29,7 +30,9 @@ async def get_users_data(
     }
 
 
-def prepare_users_for_dialog(users_orm: list):
+def prepare_users_for_dialog(
+        users_orm: Iterable[UsersORM],
+) -> list[tuple[Any]]:
     users = []
     for user in users_orm:
         conn_date = (f"{user.connection_date.day}.{user.connection_date.month}"
