@@ -10,7 +10,7 @@ from aiogram.types import UNSET_PARSE_MODE, ResponseParameters, User
 
 
 class MockedSession(BaseSession):
-    def __init__(self):
+    def __init__(self) -> None:
         super(MockedSession, self).__init__()
         self.responses: Deque[Response[TelegramType]] = deque()
         self.requests: Deque[TelegramMethod[TelegramType]] = deque()
@@ -23,7 +23,7 @@ class MockedSession(BaseSession):
     def get_request(self) -> TelegramMethod[TelegramType]:
         return self.requests.popleft()
 
-    async def close(self):
+    async def close(self) -> None:
         self.closed = True
 
     async def make_request(
@@ -58,9 +58,11 @@ class MockedBot(Bot):
     if TYPE_CHECKING:
         session: MockedSession
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: dict[str, Any]) -> None:
         super(MockedBot, self).__init__(
-            kwargs.pop("token", "42:TEST"), session=MockedSession(), **kwargs
+            str(kwargs.pop("token", "42:TEST")),
+            session=MockedSession(),
+            **kwargs,
         )
         self._me = User(
             id=self.id,
