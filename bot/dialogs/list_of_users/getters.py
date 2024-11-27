@@ -5,6 +5,7 @@ from aiogram_dialog import DialogManager
 
 from bot.database.models import UsersORM
 from bot.database.orm import db_client
+from bot.dialogs.exceptions import DialogException
 
 
 async def get_users_data(
@@ -12,7 +13,10 @@ async def get_users_data(
         **kwargs: dict[str, Any],
 ) -> dict[str, Any]:
     if dialog_manager.dialog_data.get("userlist_page") is None:
-        dialog_manager.dialog_data.update(dialog_manager.start_data)
+        if isinstance(dialog_manager.start_data, dict):
+            dialog_manager.dialog_data.update(dialog_manager.start_data)
+        else:
+            raise DialogException("Incorrect dialog start data, expected dict")
     current_page = dialog_manager.dialog_data["userlist_page"]
     users_orm = await db_client.get_all_users()
     users = prepare_users_for_dialog(users_orm)
