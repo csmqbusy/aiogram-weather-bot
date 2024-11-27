@@ -4,6 +4,7 @@ from typing import Any
 from aiogram.types import User
 from aiogram_dialog import DialogManager
 
+from bot.database.models import WeatherReportsORM
 from bot.database.orm import db_client
 from bot.utils.weather_utils import prepare_report_data
 
@@ -11,7 +12,7 @@ from bot.utils.weather_utils import prepare_report_data
 async def get_reports_data(
         dialog_manager: DialogManager,
         event_from_user: User,
-        **kwargs,
+        **kwargs: dict[str, Any],
 ) -> dict[str, Any]:
     if dialog_manager.dialog_data.get("history_page") is None:
         dialog_manager.dialog_data.update(dialog_manager.start_data)
@@ -32,12 +33,17 @@ async def get_reports_data(
     }
 
 
-def prepare_reports_for_dialog(reports_orm: list):
+def prepare_reports_for_dialog(
+        reports_orm: list[WeatherReportsORM]
+) -> list[tuple[Any]]:
     reports = []
     for report in reports_orm:
         report_info = (
-            report.id, report.city, report.date.day,
-            report.date.month, report.date.year
+            report.id,
+            report.city,
+            report.date.day,
+            report.date.month,
+            report.date.year,
         )
         reports.append(report_info)
     return sorted(reports, key=lambda item: item[0], reverse=True)
@@ -46,7 +52,7 @@ def prepare_reports_for_dialog(reports_orm: list):
 async def get_report_data(
         dialog_manager: DialogManager,
         event_from_user: User,
-        **kwargs
+        **kwargs: dict[str, Any],
 ) -> dict[str, str]:
     report_id = dialog_manager.dialog_data["report_id"]
     report = await db_client.get_report(report_id)
