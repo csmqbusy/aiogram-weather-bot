@@ -54,11 +54,10 @@ class AsyncDBClient:
 
     @classmethod
     async def get_user_city(cls, tg_id: int) -> str:
-        async with async_session_factory() as session:
-            user = await cls._get_user(tg_id)
-            if user is None:
-                raise DatabaseError(f"User with tg_id={tg_id} does not exist")
-            return user.city
+        user = await cls._get_user(tg_id)
+        if user is None:
+            raise DatabaseError(f"User with tg_id={tg_id} does not exist")
+        return user.city
 
     @staticmethod
     async def create_weather_report(
@@ -90,12 +89,11 @@ class AsyncDBClient:
 
     @staticmethod
     async def get_user_reports(tg_id: int) -> list[WeatherReportsORM]:
-        async with async_session_factory() as session:
-            user = await db_client._get_user(tg_id, load_reports=True)
-            if user is None:
-                raise DatabaseError(f"User with tg_id={tg_id} does not exist")
-            reports = user.reports
-            return reports
+        user = await db_client._get_user(tg_id, load_reports=True)
+        if user is None:
+            raise DatabaseError(f"User with tg_id={tg_id} does not exist")
+        reports = user.reports
+        return reports
 
     @classmethod
     async def get_report(cls, report_id: int) -> WeatherReportsORM:
