@@ -1,4 +1,5 @@
 import math
+from typing import Any
 
 from aiogram.types import User
 from aiogram_dialog import DialogManager
@@ -7,11 +8,14 @@ from bot.database.orm import db_client
 from bot.utils.weather_utils import prepare_report_data
 
 
-async def get_reports_data(dialog_manager: DialogManager,
-                           event_from_user: User, **kwargs):
+async def get_reports_data(
+        dialog_manager: DialogManager,
+        event_from_user: User,
+        **kwargs,
+) -> dict[str, Any]:
     if dialog_manager.dialog_data.get("history_page") is None:
         dialog_manager.dialog_data.update(dialog_manager.start_data)
-    current_page = dialog_manager.dialog_data.get("history_page")
+    current_page = dialog_manager.dialog_data["history_page"]
     reports_orm = await db_client.get_user_reports(event_from_user.id)
     reports = prepare_reports_for_dialog(reports_orm)
     n_items_per_page = 5
@@ -39,8 +43,11 @@ def prepare_reports_for_dialog(reports_orm: list):
     return sorted(reports, key=lambda item: item[0], reverse=True)
 
 
-async def get_report_data(dialog_manager: DialogManager,
-                          event_from_user: User, **kwargs):
-    report_id = dialog_manager.dialog_data.get("report_id")
+async def get_report_data(
+        dialog_manager: DialogManager,
+        event_from_user: User,
+        **kwargs
+) -> dict[str, str]:
+    report_id = dialog_manager.dialog_data["report_id"]
     report = await db_client.get_report(report_id)
     return prepare_report_data(report)
