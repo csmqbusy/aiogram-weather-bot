@@ -7,57 +7,42 @@ from translate import Translator
 
 from bot.database.models import WeatherReportsORM
 from bot.utils.info_from_weather_code import (
-    get_emoji_from_code,
-    get_weather_condition_from_code,
+    _get_emoji_from_code,
+    _get_weather_condition_from_code,
 )
 
 translator = Translator(from_lang="ru", to_lang="en")
 
 
-def prepare_weather_data(w_data: dict[str, Any]) -> dict[str, str | float]:
-    localtime = datetime.strptime(
-        w_data["location"]["localtime"], "%Y-%m-%d %H:%M"
-    )
-    month = _get_month_name_translation(localtime.strftime("%B"))
-    weekday = _get_weekday_name_translation(
-        calendar.day_name[localtime.weekday()]
-    )
-    date = f"{weekday} {localtime.day} {month} {localtime.year}г."
-    pressure_mm = round(float(w_data['current']['pressure_mb']) * 0.75, 2)
-    icon = w_data['current']['condition']['icon']
-    code = w_data['current']['condition']['code']
-    is_day = bool(w_data['current']['is_day'])
-    emoji = get_emoji_from_code(code)
-    weather_condition = get_weather_condition_from_code(code, is_day)
+def prepare_weather_data(w_data: dict[str, Any]) -> dict[str, str]:
+    localtime = _parse_localtime(w_data["location"]["localtime"])
+    date_string = _get_date_string(localtime)
+
     country = w_data['location']['country']
-    country_emoji = get_country_emoji(country)
+    country_emoji = _get_country_emoji(country)
 
     weather_data = {
-        "icon": icon,
-        "date": date,
+        "icon": w_data['current']['condition']['icon'],
+        "date": date_string,
         "city": w_data['location']['name'],
         "country": country,
         "country_emoji": country_emoji,
-        "temp": w_data['current']['temp_c'],
-        "feels_like": w_data['current']['feelslike_c'],
-        "wind_speed": w_data['current']['wind_kph'],
-        "pressure": pressure_mm,
-        "visibility": w_data['current']['vis_km'],
-        "weather_condition": f"{emoji} {weather_condition}",
+        "temp": str(w_data['current']['temp_c']),
+        "feels_like": str(w_data['current']['feelslike_c']),
+        "wind_speed": str(w_data['current']['wind_kph']),
+        "pressure": _get_pressure_mm(w_data['current']['pressure_mb']),
+        "visibility": str(w_data['current']['vis_km']),
+        "weather_condition": _get_weather_condition(w_data),
     }
     return weather_data
 
 
 def prepare_report_data(report: WeatherReportsORM) -> dict[str, str]:
     localtime = report.date
-    month = _get_month_name_translation(localtime.strftime("%B"))
-    weekday = _get_weekday_name_translation(
-        calendar.day_name[localtime.weekday()]
-    )
-    date = f"{weekday} {localtime.day} {month} {localtime.year}г."
+    date_string = _get_date_string(localtime)
 
     w_data = {
-        "date": date,
+        "date": date_string,
         "city": report.city,
         "country": report.country,
         "temp": str(report.temp),
@@ -70,7 +55,35 @@ def prepare_report_data(report: WeatherReportsORM) -> dict[str, str]:
     return w_data
 
 
-def get_country_emoji(country: str) -> str:
+def _parse_localtime(date_string: str,
+                     pattern: str = "%Y-%m-%d %H:%M") -> datetime:
+    return datetime.strptime(date_string, pattern)
+
+
+def _get_date_string(localtime: datetime) -> str:
+    month_ru = _get_month_name_translation(localtime.strftime("%B"))
+    weekday_name_en = _get_weekday_name(localtime)
+    weekday_name_ru = _get_weekday_name_translation(weekday_name_en)
+    return f"{weekday_name_ru} {localtime.day} {month_ru} {localtime.year}г."
+
+
+def _get_weekday_name(localtime: datetime) -> str:
+    return calendar.day_name[localtime.weekday()]
+
+
+def _get_pressure_mm(pressure_mb: float) -> str:
+    return str(round(pressure_mb * 0.75, 2))
+
+
+def _get_weather_condition(w_data: dict[str, Any]) -> str:
+    code = w_data['current']['condition']['code']
+    is_day = bool(w_data['current']['is_day'])
+    emoji = _get_emoji_from_code(code)
+    weather_condition = _get_weather_condition_from_code(code, is_day)
+    return f"{emoji} {weather_condition}"
+
+
+def _get_country_emoji(country: str) -> str:
     if _is_russian_country_name(country):
         country = _translate_country_name(country)
     try:
@@ -123,4 +136,4 @@ def _get_weekday_name_translation(weekday: str) -> str:
         "saturday": "суббота",
         "sunday": "воскресенье"
     }
-    return days[weekday.lower()]
+    return days.get(weekday.lower(), "неизвестно")

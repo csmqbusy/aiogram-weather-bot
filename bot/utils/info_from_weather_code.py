@@ -1,4 +1,4 @@
-def get_emoji_from_code(code: int) -> str:
+def _get_emoji_from_code(code: int) -> str:
     code_to_emoji = {
         1000: "☀️",
         1003: "🌤️",
@@ -49,11 +49,10 @@ def get_emoji_from_code(code: int) -> str:
         1279: "⛈️",
         1282: "⛈️",
     }
-
     return code_to_emoji.get(code, "🌦️")
 
 
-def get_weather_condition_from_code(
+def _get_weather_condition_from_code(
         code: int,
         is_day: bool
 ) -> str:
