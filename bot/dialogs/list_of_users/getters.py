@@ -32,7 +32,7 @@ async def get_users_data(
 
 def prepare_users_for_dialog(
         users_orm: Iterable[UsersORM],
-) -> list[tuple[Any]]:
+) -> list[tuple[Any, ...]]:
     users = []
     for user in users_orm:
         conn_date = (f"{user.connection_date.day}.{user.connection_date.month}"

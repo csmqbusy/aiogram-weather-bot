@@ -6,6 +6,7 @@ from aiogram_dialog import DialogManager
 
 from bot.database.models import WeatherReportsORM
 from bot.database.orm import db_client
+from bot.dialogs.exceptions import DialogException
 from bot.utils.weather_utils import prepare_report_data
 
 
@@ -15,7 +16,10 @@ async def get_reports_data(
         **kwargs: dict[str, Any],
 ) -> dict[str, Any]:
     if dialog_manager.dialog_data.get("history_page") is None:
-        dialog_manager.dialog_data.update(dialog_manager.start_data)
+        if isinstance(dialog_manager.start_data, dict):
+            dialog_manager.dialog_data.update(dialog_manager.start_data)
+        else:
+            raise DialogException("Incorrect dialog start data, expected dict")
     current_page = dialog_manager.dialog_data["history_page"]
     reports_orm = await db_client.get_user_reports(event_from_user.id)
     reports = prepare_reports_for_dialog(reports_orm)
@@ -35,7 +39,7 @@ async def get_reports_data(
 
 def prepare_reports_for_dialog(
         reports_orm: list[WeatherReportsORM]
-) -> list[tuple[Any]]:
+) -> list[tuple[Any, ...]]:
     reports = []
     for report in reports_orm:
         report_info = (
