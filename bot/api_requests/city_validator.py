@@ -13,9 +13,14 @@ async def validate_city_aio(city: str) -> None:
                 raise ValueError
 
 
-def validate_city(city: str) -> None:
-    r = requests.get(url='http://api.weatherapi.com/v1/current.json',
-                     params={'key': settings.API_KEY,
-                             'q': city})
-    if r.status_code == 400:
-        raise ValueError
+def validate_city(city: str) -> str:
+    r = requests.get(
+        url='http://api.weatherapi.com/v1/current.json',
+        params={
+            'key': settings.API_KEY,
+            'q': city
+        }
+    )
+    if r.status_code != 400:
+        return str(r.status_code)
+    raise ValueError
