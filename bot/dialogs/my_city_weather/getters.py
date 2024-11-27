@@ -6,8 +6,11 @@ from bot.database.orm import db_client
 from bot.utils.weather_utils import prepare_weather_data
 
 
-async def get_weather(dialog_manager: DialogManager,
-                      event_from_user: User, **kwargs):
+async def get_weather(
+        dialog_manager: DialogManager,
+        event_from_user: User,
+        **kwargs
+) -> dict[str, str]:
     user_id = event_from_user.id
     user_city = await db_client.get_user_city(user_id)
     if user_city is None:

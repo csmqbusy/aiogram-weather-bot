@@ -16,7 +16,7 @@ storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
 
-async def main():
+async def main() -> None:
     logging.basicConfig(level=logging.INFO)
     await db_client.create_tables()
     dp.startup.register(set_commands)
