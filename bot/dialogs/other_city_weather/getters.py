@@ -1,3 +1,5 @@
+from typing import Any
+
 from aiogram.types import User
 from aiogram_dialog import DialogManager
 
@@ -9,7 +11,7 @@ from bot.utils.weather_utils import prepare_weather_data
 async def get_weather(
         dialog_manager: DialogManager,
         event_from_user: User,
-        **kwargs,
+        **kwargs: dict[str, Any],
 ) -> dict[str, str]:
     city = dialog_manager.dialog_data["city"]
     user_id = event_from_user.id
