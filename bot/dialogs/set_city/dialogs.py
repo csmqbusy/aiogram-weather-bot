@@ -6,7 +6,7 @@ from aiogram_dialog.widgets.text import Format, Const
 from bot import states
 from bot.api_requests.city_validator import validate_city
 from bot.dialogs.common.handlers import close_current_dialog
-from bot.dialogs.set_city.getters import get_user_city
+from bot.dialogs.set_city.getters import get_user_city_from_state
 from bot.dialogs.set_city.handlers import correct_city_setup, error_city_setup
 from bot.lexicon import lexicon
 
@@ -42,6 +42,6 @@ set_city = Dialog(
             on_click=close_current_dialog
         ),
         state=states.SetCitySG.city_accepted,
-        getter=get_user_city
+        getter=get_user_city_from_state
     )
 )
