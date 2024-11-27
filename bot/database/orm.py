@@ -108,7 +108,7 @@ class AsyncDBClient:
     @classmethod
     async def delete_user_report(cls, report_id: int) -> None:
         async with async_session_factory() as session:
-            report = cls.get_report(report_id)
+            report = await cls.get_report(report_id)
             await session.delete(report)
             await session.commit()
 
