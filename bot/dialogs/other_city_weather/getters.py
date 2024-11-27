@@ -13,10 +13,14 @@ async def get_weather(dialog_manager: DialogManager,
     weather_full_data = await get_weather_data(city)
     weather_data = prepare_weather_data(weather_full_data)
     await db_client.create_weather_report(
-        user_id, weather_data["temp"],
-        weather_data["feels_like"], weather_data["wind_speed"],
-        weather_data["pressure"], weather_data["city"],
-        weather_data["country"], weather_data["visibility"],
-        weather_data["weather_condition"]
+        user_id,
+        float(weather_data["temp"]),
+        float(weather_data["feels_like"]),
+        float(weather_data["wind_speed"]),
+        float(weather_data["pressure"]),
+        weather_data["city"],
+        weather_data["country"],
+        float(weather_data["visibility"]),
+        weather_data["weather_condition"],
     )
     return weather_data
