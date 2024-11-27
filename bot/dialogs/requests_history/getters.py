@@ -1,5 +1,5 @@
 import math
-from typing import Any
+from typing import Any, Iterable
 
 from aiogram.types import User
 from aiogram_dialog import DialogManager
@@ -38,7 +38,7 @@ async def get_reports_data(
 
 
 def prepare_reports_for_dialog(
-        reports_orm: list[WeatherReportsORM]
+        reports_orm: Iterable[WeatherReportsORM]
 ) -> list[tuple[Any, ...]]:
     reports = []
     for report in reports_orm:

@@ -7,7 +7,7 @@ from bot.lexicon import lexicon
 
 async def error_city_handler(
         message: Message,
-        widget: ManagedTextInput,
+        widget: ManagedTextInput[str],
         dialog_manager: DialogManager,
         error: ValueError
 ) -> None:
@@ -16,7 +16,7 @@ async def error_city_handler(
 
 async def correct_city_handler(
         message: Message,
-        widget: ManagedTextInput,
+        widget: ManagedTextInput[str],
         dialog_manager: DialogManager,
         text: str
 ) -> None:
