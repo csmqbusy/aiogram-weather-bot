@@ -30,8 +30,8 @@ async def get_weather_data(city: str) -> dict[str, Any]:
 
 async def _get_data(city: str) -> dict[str, Any]:
     async with aiohttp.ClientSession(read_timeout=3) as session:
-        url = 'http://api.weatherapi.com/v1/current.json'
-        params = {'key': settings.API_KEY, 'q': city}
+        url = "http://api.weatherapi.com/v1/current.json"
+        params = {"key": settings.API_KEY, "q": city}
         async with session.get(url=url, params=params) as response:
             data = await response.json()
             return dict(data)

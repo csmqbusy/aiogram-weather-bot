@@ -40,7 +40,7 @@ class AsyncDBClient:
                 await session.commit()
                 user = await cls._get_user(tg_id)
                 if user is None:
-                    raise DatabaseError('User does not exist')
+                    raise DatabaseError("User does not exist")
             return user
 
     @classmethod
