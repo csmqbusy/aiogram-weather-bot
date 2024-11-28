@@ -1,7 +1,10 @@
+from contextlib import nullcontext
 from datetime import datetime
 
 import pytest
 
+from bot.database.exceptions import DatabaseError
+from bot.database.models import UsersORM
 from bot.database.orm import db_client
 
 
@@ -37,7 +40,34 @@ async def test_add_user(
         users = await db_client.get_all_users()
         assert len(users) == 3
 
-async def test_set_user_city():
-    await db_client.set_user_city(12345, "Сочи")
-    user_city = await db_client.get_user_city(12345)
-    assert user_city == "Сочи"
+
+@pytest.mark.parametrize(
+    "should_add, tg_id, load_reports, return_type",
+    [
+        (True, 33333, False, UsersORM),
+        (True, 33333, True, UsersORM),
+        (False, 33333, False, None),
+    ]
+)
+async def test__get_user(
+        should_add: bool,
+        tg_id: int,
+        load_reports: bool,
+        return_type: UsersORM | None,
+) -> None:
+
+    if should_add:
+        await db_client.add_user(tg_id)
+
+    user = await db_client._get_user(tg_id, load_reports=load_reports)
+    if return_type is None:
+        assert user is None
+    else:
+        assert isinstance(user, return_type)
+        # проверяем, похоже ли на список то, что подгрузила алхимия с помощью
+        # relationship, такой вариант проверки оказался самым действенным
+        if load_reports:
+            assert hasattr(user.reports, "__getitem__")
+            assert hasattr(user.reports, "__contains__")
+            assert hasattr(user.reports, "__iter__")
+            assert hasattr(user.reports, "__len__")
