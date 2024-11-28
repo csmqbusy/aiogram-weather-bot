@@ -22,7 +22,7 @@ class UsersORM(Base):
     )
 
     def __repr__(self) -> str:
-        return f"{self.id}, {self.tg_id}"
+        return f"<User id={self.id} tg_id={self.tg_id}>"
 
 
 class WeatherReportsORM(Base):
@@ -49,8 +49,7 @@ class WeatherReportsORM(Base):
 
     def __repr__(self) -> str:
         message = (
-            f"{self.city}, "
-            f"{self.date.day}.{self.date.month}.{self.date.year}, "
-            f"{self.temp} °C"
+            f"<WeatherReport "
+            f"{self.city}, {self.date.day}.{self.date.month}.{self.date.year}>"
         )
         return message
