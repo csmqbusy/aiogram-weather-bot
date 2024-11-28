@@ -126,12 +126,5 @@ class AsyncDBClient:
             users = (await session.execute(query)).scalars().all()
             return users
 
-    @staticmethod
-    async def get_all_reports() -> Sequence[WeatherReportsORM]:
-        async with async_session_factory() as session:
-            query = select(WeatherReportsORM)
-            reports = (await session.execute(query)).scalars().all()
-            return reports
-
 
 db_client = AsyncDBClient()
