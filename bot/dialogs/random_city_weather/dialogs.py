@@ -12,7 +12,7 @@ random_city_weather = Dialog(
     Window(
         Format(lexicon["weather_report"]),
         Button(
-            Const("🔄 Новый отчет"),
+            Const(lexicon["new_report"]),
             id="new_random_weather_report",
             on_click=new_random_weather_report
         ),
