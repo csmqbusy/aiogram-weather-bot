@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -5,12 +7,19 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
 
+    MODE: Literal["TEST", "DEV", "PROD"] = "DEV"
+
     DB_HOST: str = ""
     DB_PORT: int = 5432
     DB_USER: str = ""
     DB_PASS: str = ""
     DB_NAME: str = ""
+
+    TEST_DB_HOST: str = ""
+    TEST_DB_NAME: str = ""
+
     API_KEY: str = ""
+
     BOT_TOKEN: str = ""
     ADMINS_ID: list[int] = Field(default_factory=list)
 
