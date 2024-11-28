@@ -1,5 +1,6 @@
 from contextlib import nullcontext
 from datetime import datetime
+from typing import ContextManager
 
 import pytest
 
@@ -71,3 +72,26 @@ async def test__get_user(
             assert hasattr(user.reports, "__contains__")
             assert hasattr(user.reports, "__iter__")
             assert hasattr(user.reports, "__len__")
+
+
+@pytest.mark.parametrize(
+    "should_add, tg_id, city, expectation",
+    [
+        (True, 11111, "Сочи", nullcontext()),
+        (False, 11111, "Сочи", pytest.raises(DatabaseError)),
+    ]
+)
+async def test_set_user_city(
+        should_add: True,
+        tg_id: int,
+        city: str,
+        expectation: ContextManager,
+) -> None:
+
+    if should_add:
+        await db_client.add_user(tg_id)
+
+    with expectation:
+        await db_client.set_user_city(tg_id, city)
+        user_city = await db_client.get_user_city(tg_id)
+        assert user_city == city
