@@ -10,6 +10,8 @@ ENV POETRY_NO_INTERACTION=1 \
 
 RUN mkdir /app
 
+ENV PYTHONPATH=/app
+
 RUN curl -sSL https://install.python-poetry.org | python3 - --version 1.8.4
 
 WORKDIR /app
@@ -19,10 +21,8 @@ COPY alembic.ini .
 
 RUN poetry install --only=main --no-interaction --no-ansi
 
-COPY ./bot /app/bot
+COPY ./bot ./bot
 
 RUN chmod +x ./bot/start.sh
 
-ENV PYTHONPATH=/app
-
-CMD ["/app/bot/start.sh"]
+CMD [ "/app/bot/start.sh" ]
