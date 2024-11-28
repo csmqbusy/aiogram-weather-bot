@@ -1,11 +1,15 @@
+import logging
 from typing import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
 
 from bot.database.database import async_engine, async_session_factory
 from bot.database.exceptions import DatabaseError
 from bot.database.models import Base, UsersORM, WeatherReportsORM
+
+
+logger = logging.getLogger(__name__)
 
 
 class AsyncDBClient:
@@ -49,7 +53,12 @@ class AsyncDBClient:
             user = await cls._get_user(tg_id)
             if user is None:
                 raise DatabaseError(f"User with tg_id={tg_id} does not exist")
-            user.city = city
+            query = (
+                update(UsersORM)
+                .where(UsersORM.tg_id == tg_id)
+                .values(city=city)
+            )
+            await session.execute(query)
             await session.commit()
 
     @classmethod
