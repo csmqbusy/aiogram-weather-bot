@@ -1,19 +1,16 @@
-from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase
 
 from bot.settings.config import settings
 
-sync_engine = create_engine(
-    url=settings.DATABASE_URL_psycopg,
-    echo=False
-)
 
-session_factory = sessionmaker(sync_engine)
+if settings.MODE == "TEST":
+    DATABASE_URL = settings.TEST_DATABASE_URL
+else:
+    DATABASE_URL = settings.DATABASE_URL
 
 async_engine = create_async_engine(
-    url=settings.DATABASE_URL_asyncpg,
-    echo=False
+    url=DATABASE_URL, echo=False
 )
 
 async_session_factory = async_sessionmaker(async_engine)

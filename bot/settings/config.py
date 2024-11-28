@@ -24,16 +24,16 @@ class Settings(BaseSettings):
     ADMINS_ID: list[int] = Field(default_factory=list)
 
     @property
-    def DATABASE_URL_psycopg(self) -> str:
+    def DATABASE_URL(self) -> str:
         config = (f"{self.DB_USER}:{self.DB_PASS}@"
                   f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}")
         return f"postgresql+psycopg://{config}"
 
     @property
-    def DATABASE_URL_asyncpg(self) -> str:
+    def TEST_DATABASE_URL(self) -> str:
         config = (f"{self.DB_USER}:{self.DB_PASS}@"
-                  f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}")
-        return f"postgresql+asyncpg://{config}"
+                  f"{self.TEST_DB_HOST}:{self.DB_PORT}/{self.TEST_DB_NAME}")
+        return f"postgresql+psycopg://{config}"
 
 
 settings = Settings()
