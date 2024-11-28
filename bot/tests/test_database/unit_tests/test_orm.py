@@ -95,3 +95,31 @@ async def test_set_user_city(
         await db_client.set_user_city(tg_id, city)
         user_city = await db_client.get_user_city(tg_id)
         assert user_city == city
+
+
+async def test_create_weather_report():
+    await db_client.create_weather_report(
+        tg_id=22222,
+        temp=17.6,
+        feels_like=16.4,
+        wind_speed=4.2,
+        pressure_mm=800.0,
+        city="Кабардинка",
+        country="Россия",
+        visibility=10.0,
+        weather_condition="Ясно",
+    )
+    user_reports = await db_client.get_user_reports(22222)
+    assert len(user_reports) == 1
+
+    report = await db_client.get_report(user_reports[0].id)
+    assert report.temp == 17.6
+    assert report.feels_like == 16.4
+    assert report.wind_speed == 4.2
+    assert report.pressure_mm == 800.0
+    assert report.city == "Кабардинка"
+    assert report.country == "Россия"
+    assert report.visibility == 10.0
+    assert report.weather_condition == "Ясно"
+    today = datetime.now().strftime("%Y-%m-%d")
+    assert report.date.strftime("%Y-%m-%d") == today
