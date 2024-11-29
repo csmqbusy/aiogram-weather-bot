@@ -149,3 +149,51 @@ async def test_get_user_reports(
         assert hasattr(reports, "__len__")
 
         assert len(reports) == 0
+
+
+@pytest.mark.parametrize(
+    "should_add, tg_id, expectation",
+    [
+        (True, 11111, nullcontext()),
+        (False, 11111, pytest.raises(DatabaseError)),
+    ]
+)
+async def test_delete_user_report(
+        should_add: bool,
+        tg_id: id,
+        expectation: ContextManager
+) -> None:
+
+    if should_add:
+        await db_client.add_user(tg_id)
+
+    with expectation:
+        user_reports = await db_client.get_user_reports(tg_id)
+        assert len(user_reports) == 0
+
+        for i in range(5):
+            await db_client.create_weather_report(
+                tg_id=tg_id,
+                temp=17.6 + i,
+                feels_like=16.4 + i,
+                wind_speed=4.2,
+                pressure_mm=800.0 + i,
+                city="Кабардинка",
+                country="Россия",
+                visibility=10.0,
+                weather_condition="Ясно",
+            )
+
+        user_reports = await db_client.get_user_reports(tg_id)
+        assert len(user_reports) == 5
+
+        await db_client.delete_user_report(user_reports[0].id)
+
+        user_reports = await db_client.get_user_reports(tg_id)
+        assert len(user_reports) == 4
+
+        for report in user_reports:
+            await db_client.delete_user_report(report.id)
+
+        user_reports = await db_client.get_user_reports(tg_id)
+        assert len(user_reports) == 0
