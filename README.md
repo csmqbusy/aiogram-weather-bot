@@ -4,8 +4,7 @@
 Бот позволяет пользователям получать текущую погоду по названию города. 
 Поддерживает три способа запроса погоды: указание своего города и получение погоды в один клик, запрос погоды в любом другом городе и запрос погоды в случайном городе. Также можно просматривать историю своих запросов.
 
-![quick_demonstration](https://github.com/user-attachments/assets/fc1b8e1b-bede-4f9c-8b52-8c4c92b33077)
-
+<img src="https://github.com/user-attachments/assets/fc1b8e1b-bede-4f9c-8b52-8c4c92b33077" alt="quick_demonstration" width="420" height="430">
 
 ### Технологии
 
