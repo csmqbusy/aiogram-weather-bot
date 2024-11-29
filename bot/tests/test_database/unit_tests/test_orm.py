@@ -66,7 +66,7 @@ async def test__get_user(
     else:
         assert isinstance(user, return_type)
         # проверяем, похоже ли на список то, что подгрузила алхимия с помощью
-        # relationship, такой вариант проверки оказался самым действенным
+        # relationship, такой вариант проверки оказался самым адекватным
         if load_reports:
             assert hasattr(user.reports, "__getitem__")
             assert hasattr(user.reports, "__contains__")
@@ -123,3 +123,29 @@ async def test_create_weather_report():
     assert report.weather_condition == "Ясно"
     today = datetime.now().strftime("%Y-%m-%d")
     assert report.date.strftime("%Y-%m-%d") == today
+
+
+@pytest.mark.parametrize(
+    "should_add, tg_id, expectation",
+    [
+        (True, 11111, nullcontext()),
+        (False, 11111, pytest.raises(DatabaseError)),
+    ]
+)
+async def test_get_user_reports(
+        should_add: bool,
+        tg_id: id,
+        expectation: ContextManager
+) -> None:
+
+    if should_add:
+        await db_client.add_user(tg_id)
+
+    with expectation:
+        reports = await db_client.get_user_reports(tg_id)
+        assert hasattr(reports, "__getitem__")
+        assert hasattr(reports, "__contains__")
+        assert hasattr(reports, "__iter__")
+        assert hasattr(reports, "__len__")
+
+        assert len(reports) == 0
