@@ -1,7 +1,7 @@
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
 
-from bot.settings.config import settings
+from bot.core.config import settings
 
 
 class IsAdmin(BaseFilter):

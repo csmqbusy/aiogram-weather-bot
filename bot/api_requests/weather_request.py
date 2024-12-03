@@ -5,7 +5,7 @@ from typing import Any
 import aiohttp
 
 from bot.api_requests.exceptions import RequestError
-from bot.settings.config import settings
+from bot.core.config import settings
 
 
 logger = logging.getLogger(__name__)

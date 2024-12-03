@@ -1,6 +1,6 @@
 import pytest
 
-from bot.settings.config import settings
+from bot.core.config import settings
 from bot.database.database import async_engine
 from bot.database.models import Base
 

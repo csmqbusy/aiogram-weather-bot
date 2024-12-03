@@ -1,7 +1,7 @@
 import aiohttp
 import requests
 
-from bot.settings.config import settings
+from bot.core.config import settings
 
 
 async def validate_city_aio(city: str) -> None:

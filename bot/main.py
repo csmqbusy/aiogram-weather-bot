@@ -9,9 +9,9 @@ from aiogram_dialog import setup_dialogs
 from bot.database.orm import db_client
 from bot.handlers import admin_router, user_router
 from bot.services.set_commands import set_commands
-from bot.settings.config import settings
+from bot.core.config import settings
 from bot.dialogs import all_dialogs
-from bot.settings.setup_logger import setup_logger
+from bot.core.setup_logger import setup_logger
 
 bot = Bot(token=settings.BOT_TOKEN)
 storage = MemoryStorage()

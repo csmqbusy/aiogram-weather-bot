@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 
-from bot.settings.config import settings
+from bot.core.config import settings
 
 
 if settings.MODE == "TEST":
