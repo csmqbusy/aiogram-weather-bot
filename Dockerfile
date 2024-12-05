@@ -1,4 +1,5 @@
-FROM python:3.13.0-slim-bullseye
+# Сборочный образ
+FROM python:3.13.0-slim-bullseye AS compile-image
 
 RUN apt-get update && apt-get install -y curl
 
@@ -20,8 +21,19 @@ COPY alembic.ini .
 
 RUN poetry install --only=main --no-interaction --no-ansi
 
+# Окончательный образ
+FROM python:3.13.0-slim-bullseye
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/app/.venv/bin:$PATH"
+
+COPY --from=compile-image /app/.venv /app/.venv
+
+WORKDIR /app
+
+COPY alembic.ini .
 COPY ./bot ./bot
 
 RUN chmod +x ./bot/start.sh
-
 CMD [ "/app/bot/start.sh" ]
