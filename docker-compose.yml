@@ -8,6 +8,11 @@ services:
       POSTGRES_USER: superuser
       POSTGRES_PASSWORD: superpassword
       POSTGRES_DB: weatherbot
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U superuser -d weatherbot" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - "weather-bot-postgres:/var/lib/postgresql/data"
 
