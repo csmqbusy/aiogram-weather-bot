@@ -1,7 +1,6 @@
 import asyncio
 import logging
 
-import structlog
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
@@ -20,7 +19,6 @@ dp = Dispatcher(storage=storage)
 
 async def main() -> None:
     setup_logger(logging.INFO, event_width=72)
-    logger = structlog.get_logger()
     await db_client.create_tables()
     dp.startup.register(set_commands)
     dp.include_routers(
