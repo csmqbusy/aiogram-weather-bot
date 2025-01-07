@@ -9,10 +9,11 @@ readme = "README.md"
 ignore_missing_imports = true
 no_implicit_reexport = false
 strict = true
-exclude = ['bot/tests']
+exclude = "bot/tests/.*"
 
 [tool.ruff]
 line-length = 79
+exclude = ["bot/tests"]
 
 [tool.poetry.dependencies]
 python = "^3.13"
@@ -88,6 +89,7 @@ ruff = "^0.8.0"
 black = "^24.10.0"
 pytest = "^8.3.3"
 pytest-asyncio = "^0.24.0"
+pre-commit = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core"]
