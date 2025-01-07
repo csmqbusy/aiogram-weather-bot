@@ -1,9 +1,11 @@
 import logging
+from typing import Any
+
 import structlog
-from structlog.typing import EventDict
+from structlog.typing import EventDict, Processor
 
 
-def add_callsite(_, __, event_dict: EventDict) -> EventDict:
+def add_callsite(_: Any, __: str, event_dict: EventDict) -> EventDict:
     filename: str = event_dict.pop("filename")
     func_name: str = event_dict.pop("func_name")
     lineno: str = event_dict.pop("lineno")
@@ -12,18 +14,17 @@ def add_callsite(_, __, event_dict: EventDict) -> EventDict:
 
 
 def setup_logger(
-        loglevel=logging.INFO,
+        loglevel: int = logging.INFO,
         *,
-        event_width=50,
+        event_width: int = 50,
 ) -> None:
-
-    def format_message(_, __, event_dict: EventDict) -> EventDict:
+    def format_message(_: Any, __: str, event_dict: EventDict) -> EventDict:
         message = event_dict.get("event", "")
         formatted_message = message.ljust(event_width)
         event_dict["event"] = formatted_message
         return event_dict
 
-    shared_processors = [
+    shared_processors: list[Processor] = [
         structlog.stdlib.add_log_level,
         structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M:%S", utc=False),
         structlog.processors.CallsiteParameterAdder(
@@ -39,7 +40,7 @@ def setup_logger(
 
     structlog.configure(
         processors=shared_processors + [
-            structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+            structlog.stdlib.ProcessorFormatter.wrap_for_formatter
         ],
         logger_factory=structlog.stdlib.LoggerFactory(),
         cache_logger_on_first_use=True,
