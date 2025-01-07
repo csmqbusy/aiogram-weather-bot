@@ -1,9 +1,10 @@
-name: "weather-bot-db"
+name: "weather_bot"
 
 services:
 
   postgres:
     image: postgres:16-alpine
+    container_name: postgres_wb
     restart: on-failure
     ports:
       - "5432:5432"
@@ -19,5 +20,16 @@ services:
     volumes:
       - "weather-bot-postgres:/var/lib/postgresql/data"
 
+  redis:
+    image: redis:7.4.2-alpine3.21
+    container_name: redis_wb
+    restart: on-failure
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis_data:/data"
+
+
 volumes:
   weather-bot-postgres:
+  redis_data:
