@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.8.0
+    hooks:
+      - id: ruff
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: "sh mypy_run.sh"
+        language: system
+        types: [python]
+        pass_filenames: false
