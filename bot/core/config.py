@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     TEST_DB_HOST: str = ""
     TEST_DB_NAME: str = ""
 
+    REDIS_HOST: str = ""
+    REDIS_PORT: int = 6379
+    REDIS_DB: int = 0
+
     API_KEY: str = ""
 
     BOT_TOKEN: str = ""
