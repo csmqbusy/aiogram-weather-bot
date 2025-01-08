@@ -6,6 +6,7 @@ import countryflag
 from translate import Translator
 
 from bot.database.models import WeatherReportsORM
+from bot.schemas import WeatherData
 from bot.utils.info_from_weather_code import (
     _get_emoji_from_code,
     _get_weather_condition_from_code,
@@ -14,7 +15,7 @@ from bot.utils.info_from_weather_code import (
 translator = Translator(from_lang="ru", to_lang="en")
 
 
-def prepare_weather_data(w_data: dict[str, Any]) -> dict[str, str]:
+def prepare_weather_data(w_data: dict[str, Any]) -> WeatherData:
     localtime = _parse_localtime(w_data["location"]["localtime"])
     date_string = _get_date_string(localtime)
 
@@ -34,6 +35,19 @@ def prepare_weather_data(w_data: dict[str, Any]) -> dict[str, str]:
         "visibility": str(w_data["current"]["vis_km"]),
         "weather_condition": _get_weather_condition(w_data),
     }
+    weather_data = WeatherData(
+        icon=w_data["current"]["condition"]["icon"],
+        date=date_string,
+        city=w_data["location"]["name"],
+        country=country,
+        country_emoji=country_emoji,
+        temp=w_data["current"]["temp_c"],
+        feels_like=w_data["current"]["feelslike_c"],
+        wind_speed=w_data["current"]["wind_kph"],
+        pressure=_get_pressure_mm(w_data["current"]["pressure_mb"]),
+        visibility=w_data["current"]["vis_km"],
+        weather_condition=_get_weather_condition(w_data),
+    )
     return weather_data
 
 
