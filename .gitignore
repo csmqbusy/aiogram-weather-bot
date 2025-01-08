@@ -62,7 +62,8 @@ ipython_config.py
 .python-version
 
 # Environments
-.env
+.env.prod
+.env.dev
 .venv
 env/
 venv/
