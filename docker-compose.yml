@@ -31,7 +31,7 @@ services:
       context: .
     container_name: app_weather
     env_file:
-      - .env
+      - .env.prod
     depends_on:
       - postgres-db
       - redis
