@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 from bot.database.database import async_engine, async_session_factory
 from bot.database.exceptions import DatabaseError
 from bot.database.models import Base, UsersORM, WeatherReportsORM
-
+from bot.schemas import WeatherReport
 
 logger = logging.getLogger(__name__)
 
@@ -69,31 +69,21 @@ class AsyncDBClient:
         return user.city
 
     @staticmethod
-    async def create_weather_report(
-            tg_id: int,
-            temp: float,
-            feels_like: float,
-            wind_speed: float,
-            pressure_mm: float,
-            city: str,
-            country: str,
-            visibility: float,
-            weather_condition: str
-    ) -> None:
+    async def add_report(report: WeatherReport) -> None:
         async with async_session_factory() as session:
-            user = await db_client.add_user(tg_id)
-            report = WeatherReportsORM(
+            user = await db_client.add_user(report.tg_id)
+            report_orm = WeatherReportsORM(
                 owner=user.id,
-                temp=temp,
-                feels_like=feels_like,
-                wind_speed=wind_speed,
-                pressure_mm=pressure_mm,
-                city=city,
-                country=country,
-                visibility=visibility,
-                weather_condition=weather_condition
+                temp=report.temp,
+                feels_like=report.feels_like,
+                wind_speed=report.wind_speed,
+                pressure_mm=report.pressure_mm,
+                city=report.city,
+                country=report.country,
+                visibility=report.visibility,
+                weather_condition=report.weather_condition,
             )
-            session.add(report)
+            session.add(report_orm)
             await session.commit()
 
     @staticmethod
