@@ -86,8 +86,8 @@ def _get_weekday_name(localtime: datetime) -> str:
     return calendar.day_name[localtime.weekday()]
 
 
-def _get_pressure_mm(pressure_mb: float) -> str:
-    return str(round(pressure_mb * 0.75, 2))
+def _get_pressure_mm(pressure_mb: float) -> float:
+    return round(pressure_mb * 0.75, 2)
 
 
 def _get_weather_condition(w_data: dict[str, Any]) -> str:
