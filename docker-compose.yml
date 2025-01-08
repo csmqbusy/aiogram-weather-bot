@@ -1,6 +1,7 @@
 services:
   postgres-db:
     image: postgres:16-alpine
+    container_name: postgres_weather
     restart: unless-stopped
     ports:
       - "5432:5432"
@@ -16,14 +17,25 @@ services:
     volumes:
       - "weather-bot-postgres:/var/lib/postgresql/data"
 
+  redis:
+    image: redis:7.4.2-alpine3.21
+    container_name: redis_weather
+    restart: on-failure
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis_data:/data"
+
   app:
     build:
       context: .
-    container_name: app
+    container_name: app_weather
     env_file:
       - .env
     depends_on:
       - postgres-db
+      - redis
 
 volumes:
   weather-bot-postgres:
+  redis_data:
