@@ -7,6 +7,7 @@ import pytest
 from bot.database.exceptions import DatabaseError
 from bot.database.models import UsersORM
 from bot.database.orm import db_client
+from bot.schemas import WeatherReport
 
 
 @pytest.mark.parametrize(
@@ -98,7 +99,7 @@ async def test_set_user_city(
 
 
 async def test_create_weather_report():
-    await db_client.create_weather_report(
+    report = WeatherReport(
         tg_id=22222,
         temp=17.6,
         feels_like=16.4,
@@ -109,6 +110,7 @@ async def test_create_weather_report():
         visibility=10.0,
         weather_condition="Ясно",
     )
+    await db_client.add_report(report)
     user_reports = await db_client.get_user_reports(22222)
     assert len(user_reports) == 1
 
@@ -172,7 +174,7 @@ async def test_delete_user_report(
         assert len(user_reports) == 0
 
         for i in range(5):
-            await db_client.create_weather_report(
+            report = WeatherReport(
                 tg_id=tg_id,
                 temp=17.6 + i,
                 feels_like=16.4 + i,
@@ -183,6 +185,7 @@ async def test_delete_user_report(
                 visibility=10.0,
                 weather_condition="Ясно",
             )
+            await db_client.add_report(report)
 
         user_reports = await db_client.get_user_reports(tg_id)
         assert len(user_reports) == 5
