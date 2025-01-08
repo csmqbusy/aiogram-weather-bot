@@ -19,8 +19,11 @@ async def get_weather(
 ) -> dict[str, str | float]:
     city = dialog_manager.dialog_data["city"]
     user_id = event_from_user.id
-    weather_full_data = await get_weather_data(city)
-    weather_data = prepare_weather_data(weather_full_data)
+
+    weather_data = get_weather_data_from_cache(city)
+    if weather_data is None:
+        weather_full_data = await get_weather_data(city)
+        weather_data = prepare_weather_data(weather_full_data)
 
     weather_report = create_weather_report(user_id, weather_data)
     await db_client.add_report(weather_report)

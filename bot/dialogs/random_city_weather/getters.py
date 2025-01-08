@@ -21,7 +21,9 @@ async def get_random_city_weather(
     weather_full_data = {"error": "blank"}
     while "error" in weather_full_data:
         random_city = rcoc.get_random_city()
-        weather_full_data = await get_weather_data(random_city)
+        weather_data = get_weather_data_from_cache(random_city)
+        if weather_data is None:
+            weather_full_data = await get_weather_data(random_city)
 
     user_id = event_from_user.id
     weather_data = prepare_weather_data(weather_full_data)

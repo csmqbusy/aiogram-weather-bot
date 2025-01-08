@@ -21,8 +21,11 @@ async def get_weather(
     user_city = await db_client.get_user_city(user_id)
     if user_city is None:
         return {"no_city": True}
-    weather_full_data = await get_weather_data(user_city)
-    weather_data = prepare_weather_data(weather_full_data)
+
+    weather_data = get_weather_data_from_cache(user_city)
+    if weather_data is None:
+        weather_full_data = await get_weather_data(user_city)
+        weather_data = prepare_weather_data(weather_full_data)
 
     weather_report = create_weather_report(user_id, weather_data)
     await db_client.add_report(weather_report)

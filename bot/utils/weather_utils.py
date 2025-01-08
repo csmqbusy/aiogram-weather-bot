@@ -11,6 +11,7 @@ from bot.utils.info_from_weather_code import (
     _get_emoji_from_code,
     _get_weather_condition_from_code,
 )
+from bot.utils.cache import add_weather_data_to_cache
 
 translator = Translator(from_lang="ru", to_lang="en")
 
@@ -22,19 +23,6 @@ def prepare_weather_data(w_data: dict[str, Any]) -> WeatherData:
     country = w_data["location"]["country"]
     country_emoji = _get_country_emoji(country)
 
-    weather_data = {
-        "icon": w_data["current"]["condition"]["icon"],
-        "date": date_string,
-        "city": w_data["location"]["name"],
-        "country": country,
-        "country_emoji": country_emoji,
-        "temp": str(w_data["current"]["temp_c"]),
-        "feels_like": str(w_data["current"]["feelslike_c"]),
-        "wind_speed": str(w_data["current"]["wind_kph"]),
-        "pressure": _get_pressure_mm(w_data["current"]["pressure_mb"]),
-        "visibility": str(w_data["current"]["vis_km"]),
-        "weather_condition": _get_weather_condition(w_data),
-    }
     weather_data = WeatherData(
         icon=w_data["current"]["condition"]["icon"],
         date=date_string,
@@ -48,6 +36,8 @@ def prepare_weather_data(w_data: dict[str, Any]) -> WeatherData:
         visibility=w_data["current"]["vis_km"],
         weather_condition=_get_weather_condition(w_data),
     )
+    add_weather_data_to_cache(weather_data)
+
     return weather_data
 
 
